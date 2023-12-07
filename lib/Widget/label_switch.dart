@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Controller/rooms_controller.dart';
 
-import '../Constant/const_color.dart';
+import '../Constant/app_const.dart';
 
 class LabelSwitch extends StatefulWidget {
   final String firstLabel;

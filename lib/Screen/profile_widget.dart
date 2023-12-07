@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Screen/login_widget.dart';
 import 'package:hotel_booking_management_system/Screen/update_password_widget.dart';
 
+import '../Constant/app_const.dart';
 import '../Controller/profile_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -43,41 +44,47 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.teal,
         title: const Text('Profile'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Name: ${userController.name}'),
-            Text('Email: ${userController.email}'),
-            Text('Mobile: ${userController.mobile}'),
-            const SizedBox(height: 60.0),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(50),
-              ),
-              icon: const Icon(Icons.vpn_key),
-              onPressed: () {
-                Get.to(() => UpdatePasswordScreen());
-              },
-              label: const Text('Update Password'),
+        child: Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: kWebWidth),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Name: ${userController.name}'),
+                Text('Email: ${userController.email}'),
+                Text('Mobile: ${userController.mobile}'),
+                const SizedBox(height: 60.0),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(50),
+                  ),
+                  icon: const Icon(Icons.vpn_key),
+                  onPressed: () {
+                    Get.to(() => UpdatePasswordScreen());
+                  },
+                  label: const Text('Update Password'),
+                ),
+                const SizedBox(height: 16.0),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size.fromHeight(50),
+                    backgroundColor: Colors.red,
+                  ),
+                  icon: const Icon(Icons.logout),
+                  onPressed: () {
+                    _showLogoutConfirmationDialog(context);
+                  },
+                  label: const Text('Logout'),
+                ),
+              ],
             ),
-            const SizedBox(height: 16.0),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                minimumSize: const Size.fromHeight(50),
-                backgroundColor: Colors.red,
-              ),
-              icon: const Icon(Icons.logout),
-              onPressed: () {
-                _showLogoutConfirmationDialog(context);
-              },
-              label: const Text('Logout'),
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -28,6 +28,7 @@ class AddRoomTypeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.teal,
         title: const Text('Add Room Type'),
       ),
       body: Padding(

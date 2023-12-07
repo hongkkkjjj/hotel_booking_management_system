@@ -19,6 +19,7 @@ class UpdatePasswordScreen extends StatelessWidget {
     return KeyboardDismissWrapper(
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.teal,
           title: const Text('Update Your Password'),
         ),
         body: SingleChildScrollView(

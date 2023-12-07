@@ -18,10 +18,11 @@ class LandingTabScreen extends StatelessWidget {
         length: _getTabCount(),
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.teal,
             bottom: TabBar(
-              labelColor: Colors.teal,
-              indicatorColor: Colors.teal,
-              unselectedLabelColor: Colors.indigo,
+              labelColor: Colors.indigo,
+              indicatorColor: Colors.indigo,
+              unselectedLabelColor: Colors.indigo[200],
               tabs: _buildTabs(),
             ),
             title: const Text('Tabs Demo'),
