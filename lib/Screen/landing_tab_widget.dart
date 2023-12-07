@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Screen/profile_widget.dart';
+import 'package:hotel_booking_management_system/Screen/rooms_widget.dart';
 
 import '../Controller/landing_tab_controller.dart';
 
@@ -18,6 +19,9 @@ class LandingTabScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             bottom: TabBar(
+              labelColor: Colors.teal,
+              indicatorColor: Colors.teal,
+              unselectedLabelColor: Colors.indigo,
               tabs: _buildTabs(),
             ),
             title: const Text('Tabs Demo'),
@@ -64,7 +68,7 @@ class LandingTabScreen extends StatelessWidget {
     if (landingTabController.userType.value == UserType.admin) {
       return [
         const Icon(Icons.home),
-        const Icon(Icons.settings),
+        RoomsScreen(),
         ProfileScreen()
       ];
     } else {

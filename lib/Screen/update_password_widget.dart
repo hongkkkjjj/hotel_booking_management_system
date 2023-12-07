@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../Controller/profile_controller.dart';
+import '../Widget/custom_elevated_button.dart';
+import '../Widget/keyboard_dismiss_wrapper.dart';
+import '../Widget/password_textfield.dart';
 
 class UpdatePasswordScreen extends StatelessWidget {
   final UserController userController = Get.find<UserController>();
@@ -10,18 +13,42 @@ class UpdatePasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Update Password'),
-      ),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Update Password Screen'),
-            // Add password update UI components here
-          ],
+    userController.existingPassword.clear();
+    userController.newPassword.clear();
+
+    return KeyboardDismissWrapper(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Update Your Password'),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PasswordTextField(
+                  controller: userController.existingPassword,
+                  labelText: 'Existing Password',
+                ),
+                const SizedBox(height: 16),
+                PasswordTextField(
+                  controller: userController.newPassword,
+                  labelText: 'New Password',
+                ),
+                const SizedBox(height: 24),
+                CustomElevatedButton(
+                  icon: Icons.check_circle,
+                  label: 'Update',
+                  onPressed: () {
+                    Get.back();
+                  },
+                ),
+                const SizedBox(height: 24.0),
+                // Add password update UI components here
+              ],
+            ),
+          ),
         ),
       ),
     );

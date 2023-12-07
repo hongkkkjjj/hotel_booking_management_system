@@ -19,4 +19,13 @@ class RegisterController extends GetxController {
     // For simplicity, just print the entered details
     print('Name: $name, Email: $email, Mobile: $mobile, Password: $password, Confirm Password: $confirmPassword');
   }
+
+  void clearAllController()
+  {
+    nameController.clear();
+    emailController.clear();
+    mobileController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+  }
 }

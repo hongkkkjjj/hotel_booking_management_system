@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hotel_booking_management_system/Controller/profile_controller.dart';
 
 import '../Screen/landing_tab_widget.dart';
 import 'landing_tab_controller.dart';
+import 'profile_controller.dart';
 
 class LoginController extends GetxController {
   final TextEditingController emailController = TextEditingController();

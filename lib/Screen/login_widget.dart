@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hotel_booking_management_system/Screen/landing_tab_widget.dart';
+import 'package:hotel_booking_management_system/Widget/custom_elevated_button.dart';
 import '../Controller/login_controller.dart';
 import 'register_widget.dart';
 
@@ -32,28 +32,22 @@ class LoginWidget extends StatelessWidget {
               decoration: const InputDecoration(labelText: 'Password'),
             ),
             const SizedBox(height: 32.0),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(50),
-              ),
-              icon: const Icon(Icons.lock_open, size: 24),
+            CustomElevatedButton(
+              icon: Icons.lock_open,
+              label: 'Login',
+              backgroundColor: Colors.teal,
               onPressed: () {
                 loginController.login();
               },
-              label: const Text('Login'),
             ),
             const SizedBox(height: 16.0),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(50),
-                backgroundColor: Colors.grey, // Adjust the color as needed
-              ),
-              icon: const Icon(Icons.person_add_alt_1),
+            CustomElevatedButton(
+              icon: Icons.person_add_alt_1,
+              label: 'Register',
+              backgroundColor: Colors.black54,
               onPressed: () {
-                // Navigate to the Register screen
                 Get.to(RegisterScreen());
               },
-              label: const Text('Register'),
             ),
           ],
         ),

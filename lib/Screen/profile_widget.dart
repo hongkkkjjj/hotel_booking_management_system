@@ -60,8 +60,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               icon: const Icon(Icons.vpn_key),
               onPressed: () {
-                // Navigate to the update password screen
-                Get.to(UpdatePasswordScreen());
+                Get.to(() => UpdatePasswordScreen());
               },
               label: const Text('Update Password'),
             ),
