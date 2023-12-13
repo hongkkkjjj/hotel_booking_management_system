@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Constant/app_route.dart';
 import 'package:hotel_booking_management_system/Screen/login_widget.dart';
+import 'Screen/add_room_type_widget.dart';
+import 'Screen/adjust_room_price.dart';
+import 'Screen/landing_tab_widget.dart';
+import 'Screen/profile_widget.dart';
+import 'Screen/register_widget.dart';
+import 'Screen/rooms_widget.dart';
+import 'Screen/update_password_widget.dart';
 import 'Widget/keyboard_dismiss_wrapper.dart';
 import 'firebase_options.dart';
 
@@ -14,17 +22,37 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final List<GetPage> appPages = [
+    // Login
+    GetPage(name: Routes.login, page: () => LoginWidget()),
+    GetPage(name: Routes.register, page: () => RegisterScreen()),
+
+    // Landing
+    GetPage(name: Routes.home, page: () => LandingTabScreen()),
+
+    // Rooms
+    GetPage(name: Routes.rooms, page: () => RoomsScreen()),
+    GetPage(name: Routes.addRooms, page: () => AddRoomTypeScreen()),
+    GetPage(name: Routes.adjustPrice, page: () => AdjustRoomPriceScreen()),
+
+    // Profile
+    GetPage(name: Routes.profile, page: () => ProfileScreen()),
+    GetPage(name: Routes.updatePassword, page: () => UpdatePasswordScreen()),
+  ];
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Flutter Demo',
+      initialRoute: Routes.login,
+      getPages: appPages,
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
@@ -33,4 +61,5 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
 }

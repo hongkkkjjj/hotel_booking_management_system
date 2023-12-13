@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Constant/app_route.dart';
 import 'package:hotel_booking_management_system/Screen/login_widget.dart';
 import 'package:hotel_booking_management_system/Screen/update_password_widget.dart';
 
@@ -65,7 +66,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   icon: const Icon(Icons.vpn_key),
                   onPressed: () {
-                    Get.to(() => UpdatePasswordScreen());
+                    Get.toNamed(Routes.updatePassword);
                   },
                   label: const Text('Update Password'),
                 ),

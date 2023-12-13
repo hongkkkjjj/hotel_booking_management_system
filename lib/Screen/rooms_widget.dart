@@ -1,6 +1,7 @@
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Constant/app_route.dart';
 import 'package:hotel_booking_management_system/Screen/add_room_type_widget.dart';
 import 'package:hotel_booking_management_system/Screen/adjust_room_price.dart';
 
@@ -33,7 +34,7 @@ class RoomsScreen extends StatelessWidget {
                   label: 'Add New Room Type',
                   backgroundColor: Colors.teal,
                   onPressed: () {
-                    Get.to(() => AddRoomTypeScreen());
+                    Get.toNamed(Routes.addRooms);
                     // Get.bottomSheet(AddRoomTypeScreen(), isScrollControlled: true);
                   },
                 ),
@@ -96,7 +97,7 @@ class RoomsScreen extends StatelessWidget {
                       ),
                     ];
                     roomsController.addCalendarEvent(eventList);
-                    Get.to(() => AdjustRoomPriceScreen());
+                    Get.toNamed(Routes.adjustPrice);
                   },
                 ),
                 const SizedBox(height: 16.0),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Widget/custom_elevated_button.dart';
 import '../Constant/app_const.dart';
+import '../Constant/app_route.dart';
 import '../Controller/login_controller.dart';
 import 'register_widget.dart';
 
@@ -51,7 +52,7 @@ class LoginWidget extends StatelessWidget {
                   label: 'Register',
                   backgroundColor: Colors.black54,
                   onPressed: () {
-                    Get.to(() => RegisterScreen());
+                    Get.toNamed(Routes.login);
                   },
                 ),
               ],
