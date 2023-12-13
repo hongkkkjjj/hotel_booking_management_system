@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Constant/app_route.dart';
 
 import '../Screen/landing_tab_widget.dart';
 import 'landing_tab_controller.dart';
@@ -18,12 +19,12 @@ class LoginController extends GetxController {
     print('Username: $username, Password: $password');
 
     UserType userType = UserType.admin;
-    Get.put(LandingTabController()).setUserType(userType);
+    Get.put(LandingTabController(), permanent: true).setUserType(userType);
 
-    Get.put(UserController()).updateUserDetails("Leonard da vinci", "test@gmail.com", "+60 123456789");
+    Get.put(UserController(), permanent: true).updateUserDetails("Leonard da vinci", "test@gmail.com", "+60 123456789");
 
     // Navigate to the landing tab screen
-    Get.off(LandingTabScreen());
+    Get.offNamed(Routes.home);
   }
 
   Future<void> signIn() async {

@@ -52,7 +52,7 @@ class PricingCell extends StatelessWidget {
                     : isInMonth
                         ? titleColor
                         : titleColor.withOpacity(0.4),
-                fontSize: kIsWeb ? 16 : 12,
+                fontSize: kIsWeb ? 18 : 12,
               ),
             ),
           ),
@@ -90,9 +90,10 @@ class PricingCell extends StatelessWidget {
                                   'RM ${events[index].title}',
                                   maxLines: 1,
                                   minFontSize: 6,
+                                  textAlign: kIsWeb ? TextAlign.center : TextAlign.start,
                                   style: TextStyle(
                                     color: Colors.grey[50],
-                                    fontSize: kIsWeb ? 16 : 12,
+                                    fontSize: kIsWeb ? 18 : 12,
                                   ),
                                 ),
                               ),

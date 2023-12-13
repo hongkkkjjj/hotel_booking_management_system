@@ -15,6 +15,7 @@ class LoginWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.teal,
         title: const Text('Login'),
       ),
@@ -52,7 +53,7 @@ class LoginWidget extends StatelessWidget {
                   label: 'Register',
                   backgroundColor: Colors.black54,
                   onPressed: () {
-                    Get.toNamed(Routes.login);
+                    Get.toNamed(Routes.register);
                   },
                 ),
               ],

@@ -31,7 +31,7 @@ class ProfileScreen extends StatelessWidget {
                 // Call the logout method in UserController
                 userController.logout();
                 // Navigate back to the login screen
-                Get.offAll(LoginWidget());
+                Get.offAllNamed(Routes.login);
               },
               child: const Text('Logout'),
             ),
