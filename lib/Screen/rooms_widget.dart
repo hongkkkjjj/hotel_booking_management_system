@@ -33,7 +33,7 @@ class RoomsScreen extends StatelessWidget {
                   label: 'Add New Room Type',
                   backgroundColor: Colors.teal,
                   onPressed: () {
-                    Get.to(AddRoomTypeScreen());
+                    Get.to(() => AddRoomTypeScreen());
                     // Get.bottomSheet(AddRoomTypeScreen(), isScrollControlled: true);
                   },
                 ),
@@ -47,16 +47,56 @@ class RoomsScreen extends StatelessWidget {
                       CalendarEventData(
                         date: DateTime(2023, 12, 10),
                         event: "Event 1",
-                        title: 'RM 245',
+                        title: '245',
                       ),
                       CalendarEventData(
                         date: DateTime(2023, 12, 11),
                         event: "Event 1",
-                        title: 'RM 250',
+                        title: '250',
+                      ),
+                      CalendarEventData(
+                        date: DateTime(2023, 12, 12),
+                        event: "Event 1",
+                        title: '245',
+                      ),
+                      CalendarEventData(
+                        date: DateTime(2023, 12, 13),
+                        event: "Event 1",
+                        title: '250',
+                      ),
+                      CalendarEventData(
+                        date: DateTime(2023, 12, 14),
+                        event: "Event 1",
+                        title: '245',
+                      ),
+                      CalendarEventData(
+                        date: DateTime(2023, 12, 15),
+                        event: "Event 1",
+                        title: '250',
+                      ),
+                      CalendarEventData(
+                        date: DateTime(2023, 12, 16),
+                        event: "Event 1",
+                        title: '245',
+                      ),
+                      CalendarEventData(
+                        date: DateTime(2023, 12, 17),
+                        event: "Event 1",
+                        title: '250',
+                      ),
+                      CalendarEventData(
+                        date: DateTime(2023, 12, 18),
+                        event: "Event 1",
+                        title: '245',
+                      ),
+                      CalendarEventData(
+                        date: DateTime(2023, 12, 19),
+                        event: "Event 1",
+                        title: '250',
                       ),
                     ];
                     roomsController.addCalendarEvent(eventList);
-                    Get.to(AdjustRoomPriceScreen());
+                    Get.to(() => AdjustRoomPriceScreen());
                   },
                 ),
                 const SizedBox(height: 16.0),
@@ -65,7 +105,7 @@ class RoomsScreen extends StatelessWidget {
                   label: 'Manage Rooms',
                   backgroundColor: Colors.indigo,
                   onPressed: () {
-                    // Get.to(ManageRoomsScreen());
+                    // Get.to(() => ManageRoomsScreen());
                   },
                 ),
                 const Spacer(),

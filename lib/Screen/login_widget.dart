@@ -51,7 +51,7 @@ class LoginWidget extends StatelessWidget {
                   label: 'Register',
                   backgroundColor: Colors.black54,
                   onPressed: () {
-                    Get.to(RegisterScreen());
+                    Get.to(() => RegisterScreen());
                   },
                 ),
               ],

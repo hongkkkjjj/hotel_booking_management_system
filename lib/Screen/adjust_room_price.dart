@@ -25,7 +25,13 @@ class AdjustRoomPriceScreen extends StatelessWidget {
         body: Center(
           child: Container(
             constraints: const BoxConstraints(maxWidth: kWebWidth),
-            child: PricingCalendar(maxDate: maxDate),
+            child: PricingCalendar(
+              maxDate: maxDate,
+              onTapCallback:
+                  (List<CalendarEventData<Object?>> events, DateTime date) {
+                roomsController.showAdjustRoomPriceDialog(events, date);
+              },
+            ),
           ),
         ),
       ),
