@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Constant/app_route.dart';
+import 'package:hotel_booking_management_system/FirebaseController/firestore_controller.dart';
 
-import '../Screen/landing_tab_widget.dart';
 import 'landing_tab_controller.dart';
 import 'profile_controller.dart';
 
 class LoginController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  FirestoreController firestoreController = FirestoreController();
 
   void login() {
     // Implement your login logic here
@@ -28,6 +29,6 @@ class LoginController extends GetxController {
   }
 
   Future<void> signIn() async {
-    // await FirebaseAuth
+
   }
 }

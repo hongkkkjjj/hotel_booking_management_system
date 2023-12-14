@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../Constant/app_const.dart';
-import '../Structs/RoomData.dart';
+import '../FirebaseController/firestore_controller.dart';
+import '../Structs/room_data.dart';
 import '../Utils/utils.dart';
 
 class RoomsController extends GetxController {
@@ -11,6 +12,22 @@ class RoomsController extends GetxController {
   EventController eventController = EventController();
   List<CalendarEventData> eventList = <CalendarEventData>[].obs;
   List<RoomData> roomList = <RoomData>[].obs;
+  List<BedType> bedTypes = <BedType>[].obs;
+
+  FirestoreController firestoreController = FirestoreController();
+
+  @override
+  void onInit() {
+    super.onInit();
+    getBedData();
+  }
+
+  void getBedData() async {
+    List<BedType> bedTypes = await firestoreController.getBedData();
+    for (var bed in bedTypes) {
+      print('Bed ID: ${bed.id}, Bed Name: ${bed.bedName}');
+    }
+  }
 
   void updateSizeTypeValue(bool newValue) {
     sizeType.value = newValue;
@@ -53,11 +70,15 @@ class RoomsController extends GetxController {
       return CalendarEventData(
         date: entry.key,
         event: lowestPriceRoom.id.toString(),
-        title: lowestPriceRoom.price.toString(),
+        title: lowestPriceRoom.price.toInt().toString(),
       );
     }).toList();
 
     addCalendarEvent(eventList);
+  }
+
+  void addDummyRoomType() {
+
   }
 
   void showAdjustRoomPriceDialog(

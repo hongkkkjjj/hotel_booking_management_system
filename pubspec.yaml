@@ -37,8 +37,9 @@ dependencies:
   intl:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.24.0
-  get:
-  image_picker: ^1.0.4
+  cloud_firestore: ^4.13.3
+  get: ^4.6.6
+  image_picker: ^1.0.5
   calendar_view: ^1.0.4
   auto_size_text: ^3.0.0
 
@@ -51,7 +52,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
