@@ -1,6 +1,4 @@
 
-import 'dart:ffi';
-
 class RoomData {
   int id;
   double price;
@@ -12,7 +10,7 @@ class RoomData {
 class RoomType {
   int id;
   String title;
-  Bool isSquareFeet;
+  bool isSquareFeet;
   double sizeValue;
   String description;
   int guestCapacity;
