@@ -105,21 +105,21 @@ class AddRoomTypeScreen extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(labelText: 'Quantity of Rooms'),
               ),
-              const SizedBox(height: 16.0),
-              const Text('Bed Types:'),
+              const SizedBox(height: 24.0),
+              const Text(
+                'Bed Type',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
               const SizedBox(height: 8.0),
               // Input fields for bed count for each bed type
-              for (var bedType in [
-                'Small Single',
-                'Twin',
-                'Full',
-                'Queen',
-                'King'
-              ])
+              for (var bedType in roomsController.bedTypes)
                 TextField(
                   keyboardType: TextInputType.number,
-                  decoration:
-                      InputDecoration(labelText: 'Bed Count for $bedType'),
+                  decoration: InputDecoration(
+                      labelText: 'Bed Count for ${bedType.bedName}'),
                 ),
               const SizedBox(height: 24.0),
               CustomElevatedButton(

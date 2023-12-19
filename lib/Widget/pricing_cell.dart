@@ -66,47 +66,61 @@ class PricingCell extends StatelessWidget {
                   physics: const BouncingScrollPhysics(),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: List.generate(
-                      events.length,
-                      (index) => GestureDetector(
-                        onTap: () => {
-                          onTapCallback(events, date),
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: events[index].color,
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 2.0,
-                            horizontal: 3.0,
-                          ),
-                          padding: const EdgeInsets.all(2.0),
-                          alignment: Alignment.center,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: AutoSizeText(
-                                  'RM ${events[index].title}',
-                                  maxLines: 1,
-                                  minFontSize: 6,
-                                  textAlign: kIsWeb ? TextAlign.center : TextAlign.start,
-                                  style: TextStyle(
-                                    color: Colors.grey[50],
-                                    fontSize: kIsWeb ? 18 : 12,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    children: [
+                      buildLowestPriceEventWidget(events, onTapCallback, date),
+                    ],
                   ),
                 ),
               ),
             ),
         ],
+      ),
+    );
+  }
+
+  Widget buildLowestPriceEventWidget(List<CalendarEventData<Object?>> events,
+      Function onTapCallback, DateTime date) {
+    if (events.isEmpty) {
+      return const SizedBox(); // Return an empty widget if no events
+    }
+
+    // Find the event with the lowest title value
+    CalendarEventData<Object?> lowestEvent = events.reduce((curr, next) {
+      int currValue = int.tryParse(curr.title) ?? 0;
+      int nextValue = int.tryParse(next.title) ?? 0;
+      return currValue < nextValue ? curr : next;
+    });
+
+    // Create the widget for the event with the lowest title value
+    return GestureDetector(
+      onTap: () => onTapCallback(events, date),
+      child: Container(
+        decoration: BoxDecoration(
+          color: lowestEvent.color,
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+        margin: const EdgeInsets.symmetric(
+          vertical: 2.0,
+          horizontal: 3.0,
+        ),
+        padding: const EdgeInsets.all(2.0),
+        alignment: Alignment.center,
+        child: Row(
+          children: [
+            Expanded(
+              child: AutoSizeText(
+                'RM ${lowestEvent.title}',
+                maxLines: 1,
+                minFontSize: 6,
+                textAlign: kIsWeb ? TextAlign.center : TextAlign.start,
+                style: TextStyle(
+                  color: Colors.grey[50],
+                  fontSize: kIsWeb ? 18 : 12,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

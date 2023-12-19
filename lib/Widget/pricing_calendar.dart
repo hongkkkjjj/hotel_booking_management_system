@@ -8,7 +8,7 @@ class PricingCalendar extends StatelessWidget {
   final DateTime maxDate;
   final OnCellTapCallback onTapCallback;
 
-  const PricingCalendar({Key? key, required this.maxDate, required this.onTapCallback}) : super(key: key);
+  const PricingCalendar({super.key, required this.maxDate, required this.onTapCallback});
 
   @override
   Widget build(BuildContext context) {
