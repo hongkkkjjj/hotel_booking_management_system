@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:calendar_view/calendar_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -167,61 +168,7 @@ class RoomsController extends GetxController {
                 for (var event in events)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        SizedBox(
-                          width: 100,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Text(event.title),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 85,
-                          child: TextField(
-                            enabled: false,
-                            // Makes the TextField non-editable
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                              ),
-                              disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                              ),
-                            ),
-                            style: const TextStyle(
-                              color: Colors.black, // Set text color to black
-                            ),
-                            controller: TextEditingController(
-                              text: 'RM ${event.title}',
-                            ),
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: Icon(Icons.arrow_forward, size: 24),
-                        ),
-                        SizedBox(
-                          width: 100,
-                          child: TextField(
-                            enabled: isAfter,
-                            maxLength: 4,
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              counterText: "",
-                              hintText: '0',
-                              prefixIcon: Padding(
-                                padding: EdgeInsets.only(left: 4.0, right: 4.0),
-                                child: Text('RM'),
-                              ),
-                              prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: buildRoomPriceRow(event, isAfter),
                   ),
                 const SizedBox(height: 20),
                 // Buttons Row
@@ -256,6 +203,97 @@ class RoomsController extends GetxController {
         ),
       ),
       barrierDismissible: false,
+    );
+  }
+
+  Widget buildRoomPriceRow(CalendarEventData event, bool isAfter) {
+    if (!kIsWeb) {
+      // Web layout: All components in one row
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          buildTitle(event),
+          buildOldPrice(event),
+          const Icon(Icons.arrow_forward, size: 24),
+          buildNewPrice(isAfter),
+        ],
+      );
+    } else {
+      // Non-web layout: Components split into two rows
+      return Column(
+        children: <Widget>[
+          // First Row: Title and Spacer
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                buildTitle(event),
+                const Spacer(),
+              ],
+            ),
+          ),
+          // Second Row: Old Price, Arrow Icon, and New Price
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              buildOldPrice(event),
+              const Icon(Icons.arrow_forward, size: 24),
+              buildNewPrice(isAfter),
+            ],
+          ),
+        ],
+      );
+    }
+  }
+
+  Widget buildTitle(CalendarEventData event) {
+    return SizedBox(
+      width: 50,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text(event.title),
+      ),
+    );
+  }
+
+  Widget buildOldPrice(CalendarEventData event) {
+    return SizedBox(
+      width: 85,
+      child: TextField(
+        enabled: false,
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black),
+          ),
+        ),
+        style: const TextStyle(color: Colors.black),
+        controller: TextEditingController(text: 'RM ${event.title}'),
+      ),
+    );
+  }
+
+  Widget buildNewPrice(bool isAfter) {
+    return SizedBox(
+      width: 100,
+      child: TextField(
+        enabled: isAfter,
+        maxLength: 4,
+        keyboardType: TextInputType.number,
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          counterText: "",
+          hintText: '0',
+          prefixIcon: Padding(
+            padding: EdgeInsets.only(left: 4.0, right: 4.0),
+            child: Text('RM'),
+          ),
+          prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
+        ),
+      ),
     );
   }
 }
