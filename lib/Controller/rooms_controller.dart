@@ -13,7 +13,7 @@ class RoomsController extends GetxController {
   RxBool sizeType = true.obs;
   EventController eventController = EventController();
   List<CalendarEventData> eventList = <CalendarEventData>[].obs;
-  List<RoomData> roomList = <RoomData>[].obs;
+  List<RoomType> roomList = <RoomType>[].obs;
   List<BedType> bedTypes = <BedType>[].obs;
 
   FirestoreController firestoreController = FirestoreController();
@@ -22,12 +22,20 @@ class RoomsController extends GetxController {
   void onInit() {
     super.onInit();
     getBedData();
+    getRoomData();
   }
 
   void getBedData() async {
     bedTypes = await firestoreController.getBedData();
     for (var bed in bedTypes) {
       print('Bed ID: ${bed.id}, Bed Name: ${bed.bedName}');
+    }
+  }
+
+  void getRoomData() async {
+    roomList = await firestoreController.getRoomData();
+    for (var room in roomList) {
+      print('Room ID: ${room.id}, Title: ${room.title}, Price: ${room.price}');
     }
   }
 
@@ -209,7 +217,6 @@ class RoomsController extends GetxController {
                                 child: Text('RM'),
                               ),
                               prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
-                              prefixStyle:
                             ),
                           ),
                         ),
