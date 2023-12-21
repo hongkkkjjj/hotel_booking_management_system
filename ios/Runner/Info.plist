@@ -47,5 +47,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Access library for room images</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Access camera for room images</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Access microphone for room recording</string>
 </dict>
 </plist>
