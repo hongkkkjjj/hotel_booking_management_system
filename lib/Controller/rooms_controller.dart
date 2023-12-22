@@ -207,7 +207,7 @@ class RoomsController extends GetxController {
   }
 
   Widget buildRoomPriceRow(CalendarEventData event, bool isAfter) {
-    if (!kIsWeb) {
+    if (kIsWeb) {
       // Web layout: All components in one row
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -224,7 +224,7 @@ class RoomsController extends GetxController {
         children: <Widget>[
           // First Row: Title and Spacer
           Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
+            padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
