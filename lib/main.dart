@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Constant/app_route.dart';
 import 'package:hotel_booking_management_system/Screen/login_widget.dart';
+import 'package:hotel_booking_management_system/Screen/manage_room_widget.dart';
 import 'Screen/add_room_type_widget.dart';
 import 'Screen/adjust_room_price.dart';
 import 'Screen/landing_tab_widget.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
     GetPage(name: Routes.rooms, page: () => RoomsScreen()),
     GetPage(name: Routes.addRooms, page: () => AddRoomTypeScreen()),
     GetPage(name: Routes.adjustPrice, page: () => AdjustRoomPriceScreen()),
+    GetPage(name: Routes.manageRoom, page: () => ManageRoomScreen()),
 
     // Profile
     GetPage(name: Routes.profile, page: () => ProfileScreen()),

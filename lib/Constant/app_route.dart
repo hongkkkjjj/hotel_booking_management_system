@@ -7,4 +7,5 @@ class Routes {
   static const adjustPrice = '/adjust_price';
   static const profile = '/profile';
   static const updatePassword = '/update_password';
+  static const manageRoom = '/manage_room';
 }

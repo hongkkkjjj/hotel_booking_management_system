@@ -54,7 +54,7 @@ class RoomsScreen extends StatelessWidget {
                   label: 'Manage Rooms',
                   backgroundColor: Colors.indigo,
                   onPressed: () {
-                    // Get.to(() => ManageRoomsScreen());
+                    Get.toNamed(Routes.manageRoom);
                   },
                 ),
                 const Spacer(),
