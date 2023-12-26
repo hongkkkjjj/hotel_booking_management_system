@@ -4,32 +4,68 @@ import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../FirebaseController/firestore_controller.dart';
 import '../Structs/room_data.dart';
 import '../Utils/utils.dart';
 
 class RoomsController extends GetxController {
-  RxBool sizeType = true.obs;
   EventController eventController = EventController();
   List<CalendarEventData> eventList = <CalendarEventData>[].obs;
   List<RoomType> roomList = <RoomType>[].obs;
   List<BedType> bedTypes = <BedType>[].obs;
+  List<XFile> imageList = <XFile>[];
+
+  // Add room
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController squareFeetController = TextEditingController();
+  final TextEditingController squareMeterController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController guestCapController = TextEditingController();
+  List<TextEditingController> bedCountControllers = [];
+  FocusNode squareMeterFocusNode = FocusNode();
+  FocusNode squareFeetFocusNode = FocusNode();
 
   FirestoreController firestoreController = FirestoreController();
 
   @override
   void onInit() {
     super.onInit();
-    getBedData();
+    getBedData().then((_) {
+      bedCountControllers = List.generate(
+        bedTypes.length,
+        (index) => TextEditingController(),
+      );
+    });
+
     getRoomData();
+    squareMeterFocusNode.addListener(() {
+      if (!squareMeterFocusNode.hasFocus) {
+        convertToSquareFeet();
+      }
+    });
+    squareFeetFocusNode.addListener(() {
+      if (!squareFeetFocusNode.hasFocus) {
+        convertToSquareMeters();
+      }
+    });
   }
 
-  void getBedData() async {
-    bedTypes = await firestoreController.getBedData();
-    for (var bed in bedTypes) {
-      print('Bed ID: ${bed.id}, Bed Name: ${bed.bedName}');
+  @override
+  void onClose() {
+    squareMeterFocusNode.dispose();
+    squareFeetFocusNode.dispose();
+    super.onClose();
+  }
+
+  Future<void> getBedData() async {
+    try {
+      var fetchedBedTypes = await firestoreController.getBedData();
+      bedTypes.assignAll(fetchedBedTypes); // Assign the fetched data
+    } catch (e) {
+      print("Error fetching bed data: $e");
     }
   }
 
@@ -40,14 +76,12 @@ class RoomsController extends GetxController {
     }
   }
 
-  void updateSizeTypeValue(bool newValue) {
-    sizeType.value = newValue;
-  }
-
   void addCalendarEvent(List<CalendarEventData> list) {
     eventList = list;
     eventController.addAll(list);
   }
+
+  // region Get room data
 
   void addDummyRoomData() {
     if (eventList.isNotEmpty) {
@@ -65,47 +99,61 @@ class RoomsController extends GetxController {
     final List<RoomData> dummyList = List.generate(30, (index) {
       DateTime date = DateTime.now().add(Duration(days: index));
       int roomId = random.nextInt(3) + 1; // Random room ID (1-3)
-      double price = defaultPrices[roomId]! + random.nextInt(20) - 10; // Adjust price randomly
+      double price = defaultPrices[roomId]! +
+          random.nextInt(20) -
+          10; // Adjust price randomly
       return RoomData(roomId, price, date);
     });
 
     groupAndSortRoomData(dummyList, defaultPrices);
   }
 
-  void groupAndSortRoomData(List<RoomData> dummyList, Map<int, double> defaultPrices) {
+  void groupAndSortRoomData(
+      List<RoomData> dummyList, Map<int, double> defaultPrices) {
     final DateTime now = DateTime.now();
     final DateTime today = DateTime(now.year, now.month, now.day);
-    final DateTime maxDate = DateTime.now().add(const Duration(days: 2)); // 2 months from today
+    final DateTime maxDate =
+        DateTime.now().add(const Duration(days: 2)); // 2 months from today
     final Map<DateTime, List<RoomData>> groupedByDate = {};
 
     // Initial grouping by date
     for (var room in dummyList) {
-      groupedByDate.putIfAbsent(DateTime(room.date.year, room.date.month, room.date.day), () => []).add(room);
+      groupedByDate
+          .putIfAbsent(DateTime(room.date.year, room.date.month, room.date.day),
+              () => [])
+          .add(room);
     }
 
     List<CalendarEventData> eventList = [];
 
-    for (DateTime date = today; date.isBefore(maxDate); date = date.add(const Duration(days: 1))) {
+    for (DateTime date = today;
+        date.isBefore(maxDate);
+        date = date.add(const Duration(days: 1))) {
       DateTime startTime = DateTime(date.year, date.month, date.day);
       DateTime endTime = DateTime(date.year, date.month, date.day, 23, 59, 59);
 
       for (var roomId = 1; roomId <= 3; roomId++) {
         var roomDataForDateAndId = groupedByDate[date]!.firstWhere(
-              (room) => room.id == roomId,
+          (room) => room.id == roomId,
           orElse: () => RoomData(roomId, defaultPrices[roomId]!, date),
         );
 
         eventList.add(CalendarEventData(
           date: date,
-          startTime: startTime, // Start of the day
-          endTime: endTime, // End of the day (23:59:59)
+          startTime: startTime,
+          // Start of the day
+          endTime: endTime,
+          // End of the day (23:59:59)
           event: roomDataForDateAndId.id.toString(),
           title: roomDataForDateAndId.price.toInt().toString(),
         ));
       }
     }
 
-    eventList.forEach((event) => print("Date: ${event.date}, ID: ${event.event}, Price: ${event.title}"));
+    for (var event in eventList) {
+      print(
+        "Date: ${event.date}, ID: ${event.event}, Price: ${event.title}");
+    }
     print('event count ${eventList.length}');
     addCalendarEvent(eventList);
   }
@@ -116,13 +164,111 @@ class RoomsController extends GetxController {
     }).toList();
   }
 
-  bool isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+  // endregion
+
+  // region Add new room
+
+  void createNewRoom(BuildContext context) async {
+    var id = roomList.length.toString();
+    List<BedData> bedsList = [];
+    for (int i = 0; i < bedTypes.length; i++) {
+      String text = bedCountControllers[i].text;
+      if (text.isNotEmpty && text != '0') {
+        int count = int.tryParse(text) ?? 0;
+        bedsList.add(BedData(bedTypes[i].bedName, count));
+      }
+    }
+
+    var room = RoomType(
+      id,
+      titleController.text,
+      imageList.length,
+      int.parse(squareFeetController.text),
+      int.parse(squareMeterController.text),
+      descriptionController.text,
+      int.parse(guestCapController.text),
+      bedsList,
+      int.parse(priceController.text),
+    );
+
+    var result = await firestoreController.addRoomData(room, imageList);
+
+    if (result) {
+      clearEditingController();
+      _showUploadDialog(context, '', 'Successfully add new room');
+      getRoomData();
+    } else {
+      _showUploadDialog(context, '', 'Something wrong is happened. Please try again.');
+    }
   }
+
+  void clearEditingController()
+  {
+    imageList = [];
+    titleController.text = '';
+    squareFeetController.text = '';
+    squareMeterController.text = '';
+    descriptionController.text = '';
+    guestCapController.text = '';
+    priceController.text = '';
+  }
+
+  void _showUploadDialog(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // endregion
+
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
+  // region Conversion
+
+  void convertToSquareFeet() {
+    if (squareMeterController.text.isNotEmpty) {
+      double meters = double.parse(squareMeterController.text);
+      int feet = (meters * 10.7639).round();
+      if (squareFeetController.text != feet.toString()) {
+        squareFeetController.text = feet.toString();
+      }
+    }
+  }
+
+  void convertToSquareMeters() {
+    if (squareFeetController.text.isNotEmpty) {
+      double feet = double.parse(squareFeetController.text);
+      int meters = (feet * 0.092903).round();
+      if (squareMeterController.text != meters.toString()) {
+        squareMeterController.text = meters.toString();
+      }
+    }
+  }
+
+  // endregion
+
+  // region Dialog
 
   void showAdjustRoomPriceDialog(
       List<CalendarEventData<Object?>> events, DateTime selectedDate) {
-
     if (events.isEmpty) {
       return;
     }
@@ -296,8 +442,9 @@ class RoomsController extends GetxController {
       ),
     );
   }
-}
 
+// endregion
+}
 
 // The home screen I not yet done, but the concept is
 // * Home Screen (Normal user)
@@ -316,4 +463,3 @@ class RoomsController extends GetxController {
 // - If booking request pop up, show details (room number, staying date, checkout date, duration, booking user name, mobile no)
 // - Calendar with Ongoing staying customer on that day
 // - If click on that day will pop up same screen like staying user, but focus on that day
-

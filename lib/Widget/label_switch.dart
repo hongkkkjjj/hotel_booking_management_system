@@ -23,11 +23,13 @@ class LabelSwitch extends StatefulWidget {
 class LabelSwitchState extends State<LabelSwitch> {
   @override
   Widget build(BuildContext context) {
-    var sizeType = widget.roomsController.sizeType;
+    // var sizeType = widget.roomsController.sizeType;
+    var sizeType = false;
 
     return GestureDetector(
       onTap: () {
-        widget.roomsController.sizeType.toggle();
+        // widget.roomsController.sizeType.toggle();
+        sizeType = !sizeType;
       },
       child: Container(
         width: double.infinity, // Full width
@@ -45,7 +47,7 @@ class LabelSwitchState extends State<LabelSwitch> {
                     height: 30,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
-                      color: sizeType.value ? Colors.white : kSecondaryColor,
+                      color: sizeType ? Colors.white : kSecondaryColor,
                     ),
                     child: Center(
                       child: Padding(
@@ -54,7 +56,7 @@ class LabelSwitchState extends State<LabelSwitch> {
                           widget.firstLabel,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: sizeType.value ? Colors.black : Colors.white,
+                            color: sizeType ? Colors.black : Colors.white,
                           ),
                         ),
                       ),
@@ -69,7 +71,7 @@ class LabelSwitchState extends State<LabelSwitch> {
                     height: 30,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
-                      color: sizeType.value ? kSecondaryColor : Colors.white,
+                      color: sizeType ? kSecondaryColor : Colors.white,
                     ),
                     child: Center(
                       child: Padding(
@@ -78,7 +80,7 @@ class LabelSwitchState extends State<LabelSwitch> {
                           widget.secondLabel,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: sizeType.value ? Colors.white : Colors.black,
+                            color: sizeType ? Colors.white : Colors.black,
                           ),
                         ),
                       ),

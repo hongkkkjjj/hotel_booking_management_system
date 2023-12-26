@@ -4,7 +4,6 @@ import 'package:hotel_booking_management_system/Widget/custom_elevated_button.da
 import '../Constant/app_const.dart';
 import '../Constant/app_route.dart';
 import '../Controller/login_controller.dart';
-import 'register_widget.dart';
 
 class LoginWidget extends StatelessWidget {
   final LoginController loginController = Get.put(LoginController());

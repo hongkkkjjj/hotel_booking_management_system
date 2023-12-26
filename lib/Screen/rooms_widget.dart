@@ -1,9 +1,6 @@
-import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Constant/app_route.dart';
-import 'package:hotel_booking_management_system/Screen/add_room_type_widget.dart';
-import 'package:hotel_booking_management_system/Screen/adjust_room_price.dart';
 
 import '../Constant/app_const.dart';
 import '../Controller/rooms_controller.dart';
@@ -31,7 +28,7 @@ class RoomsScreen extends StatelessWidget {
               children: [
                 CustomElevatedButton(
                   icon: Icons.add,
-                  label: 'Add New Room Type',
+                  label: 'Add New Room',
                   backgroundColor: Colors.teal,
                   onPressed: () {
                     Get.toNamed(Routes.addRooms);

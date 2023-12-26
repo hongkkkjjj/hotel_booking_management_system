@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Controller/rooms_controller.dart';
-import 'package:hotel_booking_management_system/Widget/label_switch.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../Widget/custom_elevated_button.dart';
@@ -19,6 +18,7 @@ class AddRoomTypeScreen extends StatelessWidget {
 
     try {
       resultList = await picker.pickMultiImage();
+      roomsController.imageList = resultList;
     } on Exception catch (e) {
       print(e.toString());
     }
@@ -37,77 +37,58 @@ class AddRoomTypeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ElevatedButton(
-                onPressed: loadAssets,
-                child: const Text('Upload Room Images'),
+              Center(
+                child: ElevatedButton(
+                  onPressed: loadAssets,
+                  child: const Text('Upload Room Images'),
+                ),
               ),
-              const SizedBox(height: 16.0),
-              // Obx(() {
-              //   // Display selected images
-              //   // return Wrap(
-              //   //   spacing: 8.0,
-              //   //   runSpacing: 8.0,
-              //   //   children: addRoomTypeController.images.map((Asset asset) {
-              //   //     return Container(
-              //   //       height: 100.0,
-              //   //       width: 100.0,
-              //   //       decoration: BoxDecoration(
-              //   //         color: Colors.grey[200],
-              //   //         borderRadius: BorderRadius.circular(8.0),
-              //   //       ),
-              //   //       child: AssetThumb(
-              //   //         asset: asset,
-              //   //         width: 100,
-              //   //         height: 100,
-              //   //       ),
-              //   //     );
-              //   //   }).toList(),
-              //   // );
-              //   return ColoredBox(color: Colors.amber);
-              // }),
+
               const SizedBox(height: 16.0),
               const TextField(
                 decoration: InputDecoration(labelText: 'Room Title'),
               ),
               const SizedBox(height: 16.0),
-              LabelSwitch(
-                firstLabel: 'Square Meter',
-                secondLabel: 'Square Feet',
-                roomsController: roomsController,
-              ),
-              const SizedBox(height: 16.0),
-              Obx(() {
-                return TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText:
-                        'Size in ${roomsController.sizeType.value ? 'Square Meter (m\u00b2)' : 'Square Feet (ft\u00b2)'}',
-                  ),
-                );
-              }),
-              const SizedBox(height: 16.0),
-              const TextField(
+              TextField(
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Price (RM)'),
+                controller: roomsController.squareFeetController,
+                decoration: const InputDecoration(
+                  labelText: 'Size in Square Feet (ft\u00b2)',
+                ),
+                focusNode: roomsController.squareFeetFocusNode,
+                onEditingComplete: roomsController.convertToSquareMeters,
               ),
               const SizedBox(height: 16.0),
-              const TextField(
-                decoration: InputDecoration(labelText: 'Description'),
-              ),
-              const SizedBox(height: 16.0),
-              const TextField(
+              TextField(
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                controller: roomsController.squareMeterController,
+                decoration: const InputDecoration(
+                  labelText: 'Size in Square Meter (m\u00b2)',
+                ),
+                focusNode: roomsController.squareMeterFocusNode,
+                onEditingComplete: roomsController.convertToSquareFeet,
+              ),
+              const SizedBox(height: 16.0),
+              TextField(
+                keyboardType: TextInputType.number,
+                controller: roomsController.priceController,
+                decoration: const InputDecoration(labelText: 'Price (RM)'),
+              ),
+              const SizedBox(height: 16.0),
+              TextField(
+                controller: roomsController.descriptionController,
+                decoration: const InputDecoration(labelText: 'Description'),
+              ),
+              const SizedBox(height: 16.0),
+              TextField(
+                keyboardType: TextInputType.number,
+                controller: roomsController.guestCapController,
+                decoration: const InputDecoration(
                     labelText: 'Can Accommodate How Many Persons'),
-              ),
-              const SizedBox(height: 16.0),
-              const TextField(
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Quantity of Rooms'),
               ),
               const SizedBox(height: 24.0),
               const Text(
-                'Bed Type',
+                'Bed Type (Leave empty if 0)',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -115,19 +96,23 @@ class AddRoomTypeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8.0),
               // Input fields for bed count for each bed type
-              for (var bedType in roomsController.bedTypes)
-                TextField(
+              ...List.generate(roomsController.bedTypes.length, (index) {
+                var bedType = roomsController.bedTypes[index];
+                return TextField(
                   keyboardType: TextInputType.number,
+                  controller: roomsController.bedCountControllers[index],
                   decoration: InputDecoration(
-                      labelText: 'Bed Count for ${bedType.bedName}'),
-                ),
+                    labelText: 'Bed Count for ${bedType.bedName}',
+                  ),
+                );
+              }),
               const SizedBox(height: 24.0),
               CustomElevatedButton(
                 icon: Icons.save,
                 label: 'Save',
                 backgroundColor: Colors.teal,
                 onPressed: () {
-                  // save room and go back
+                  roomsController.createNewRoom(context);
                 },
               ),
               const SizedBox(height: 24.0),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Constant/app_route.dart';
-import 'package:hotel_booking_management_system/Screen/login_widget.dart';
-import 'package:hotel_booking_management_system/Screen/update_password_widget.dart';
 
 import '../Constant/app_const.dart';
 import '../Controller/profile_controller.dart';
