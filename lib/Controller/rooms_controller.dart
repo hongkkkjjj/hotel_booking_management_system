@@ -216,7 +216,7 @@ class RoomsController extends GetxController {
     priceController.text = '';
   }
 
-  void _showUploadDialog(BuildContext context, String title, String content, VoidCallback onDialogClose) {
+  void _showUploadDialog(BuildContext context, String title, String content, VoidCallback? onDialogClose) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -228,7 +228,10 @@ class RoomsController extends GetxController {
               child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
-                onDialogClose();
+
+                if (onDialogClose != null) {
+                  onDialogClose();
+                }
               },
             ),
           ],
