@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../Constant/app_route.dart';
 import '../FirebaseController/firestore_controller.dart';
 import '../Structs/room_data.dart';
 import '../Utils/utils.dart';
@@ -195,10 +196,12 @@ class RoomsController extends GetxController {
 
     if (result) {
       clearEditingController();
-      _showUploadDialog(context, '', 'Successfully add new room');
-      getRoomData();
+      _showUploadDialog(context, '', 'Successfully add new room', () {
+        getRoomData();
+        Get.offNamed(Routes.home);
+      });
     } else {
-      _showUploadDialog(context, '', 'Something wrong is happened. Please try again.');
+      _showUploadDialog(context, '', 'Something wrong is happened. Please try again.', null);
     }
   }
 
@@ -213,7 +216,7 @@ class RoomsController extends GetxController {
     priceController.text = '';
   }
 
-  void _showUploadDialog(BuildContext context, String title, String content) {
+  void _showUploadDialog(BuildContext context, String title, String content, VoidCallback onDialogClose) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -225,6 +228,7 @@ class RoomsController extends GetxController {
               child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
+                onDialogClose();
               },
             ),
           ],

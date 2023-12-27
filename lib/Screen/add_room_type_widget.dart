@@ -45,8 +45,9 @@ class AddRoomTypeScreen extends StatelessWidget {
               ),
 
               const SizedBox(height: 16.0),
-              const TextField(
-                decoration: InputDecoration(labelText: 'Room Title'),
+              TextField(
+                decoration: const InputDecoration(labelText: 'Room Title'),
+                controller: roomsController.titleController,
               ),
               const SizedBox(height: 16.0),
               TextField(
