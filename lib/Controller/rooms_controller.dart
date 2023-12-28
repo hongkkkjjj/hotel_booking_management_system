@@ -4,10 +4,12 @@ import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Constant/app_const.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../Constant/app_route.dart';
 import '../FirebaseController/firestore_controller.dart';
+import '../FirebaseController/storage_controller.dart';
 import '../Structs/room_data.dart';
 import '../Utils/utils.dart';
 
@@ -17,6 +19,7 @@ class RoomsController extends GetxController {
   List<RoomType> roomList = <RoomType>[].obs;
   List<BedType> bedTypes = <BedType>[].obs;
   List<XFile> imageList = <XFile>[];
+  var imageUrls = <String, List<String>>{}.obs;
 
   // Add room
   final TextEditingController titleController = TextEditingController();
@@ -74,6 +77,7 @@ class RoomsController extends GetxController {
     roomList = await firestoreController.getRoomData();
     for (var room in roomList) {
       print('Room ID: ${room.id}, Title: ${room.title}, Price: ${room.price}');
+      loadImages(room.id, room.imageCount);
     }
   }
 
@@ -83,6 +87,25 @@ class RoomsController extends GetxController {
   }
 
   // region Get room data
+
+  // region Get room image
+
+  Future<void> loadImages(String bedTypeId, int imageCount) async {
+    try {
+      // Ensure a list exists for this bedTypeId, otherwise create it
+      imageUrls[bedTypeId] = imageUrls[bedTypeId] ?? [];
+
+      for (int i = 0; i < imageCount; i++) {
+        String imagePath = 'images/$bedTypeId-$i.jpg';
+        String url = await StorageController().getImageUrl(imagePath);
+        imageUrls[bedTypeId]?.add(url); // Add the URL to the list for this bedTypeId
+      }
+    } catch (e) {
+      print('Error loading images: $e');
+    }
+  }
+
+  // endregion
 
   void addDummyRoomData() {
     if (eventList.isNotEmpty) {

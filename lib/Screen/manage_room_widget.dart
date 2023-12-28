@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,53 +18,57 @@ class ManageRoomScreen extends StatelessWidget {
         backgroundColor: Colors.teal,
         title: const Text('Manage rooms'),
       ),
-      body: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: kWebWidth),
-          child: ListView(
-            children: List.generate(
-              10,
-              // (index) => _roomCell(),
-              (index) => _customCell(
-                'Single Room',
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ornare lectus vel lacus bibendum, sit amet sollicitudin ex faucibus. Curabitur blandit consequat lorem nec facilisis. Vivamus mi quam, vehicula id viverra sit amet, gravida et risus. Phasellus condimentum faucibus efficitur. Pellentesque tincidunt purus nec magna elementum faucibus. Etiam sollicitudin rutrum tellus nec rutrum. Suspendisse et placerat elit. Aliquam id mollis leo, eget cursus ligula. Nam eget massa risus. Phasellus volutpat mauris et neque vulputate, ut vehicula neque dapibus.\n\nInteger at ultricies massa. Vivamus volutpat, ligula eget iaculis iaculis, urna orci egestas nunc, eget placerat mauris eros id velit. Donec neque dolor, ultrices nec ornare sit amet, eleifend vitae sapien. Mauris vitae malesuada neque. Aliquam sed hendrerit orci, non hendrerit metus. Maecenas ultrices dui vitae commodo dignissim. Nam in tellus sapien. Vestibulum vel congue risus. Cras efficitur tristique neque, ac porttitor velit. Vestibulum eget tristique turpis. Nam tincidunt est at erat dignissim, at porta sem iaculis. Nunc consectetur porta est, quis viverra augue vulputate ut. Nullam a ornare sem, sed vehicula orci. Sed at turpis accumsan, rutrum felis nec, sagittis dui. Phasellus a mauris metus.\n\nIn iaculis sapien non lectus venenatis, vitae varius lorem mollis. Morbi non eleifend felis, non lobortis tellus. Quisque in gravida velit, id volutpat orci. Proin hendrerit, diam et consectetur aliquet, velit erat mattis nisl, vitae condimentum eros dui ornare urna. Ut at mattis ante, id sollicitudin urna. Curabitur nunc diam, porttitor sed imperdiet eu, vehicula condimentum odio. Curabitur id sem nec purus gravida auctor at nec quam. Integer lacinia nunc vel tempor imperdiet. In ante nisl, pulvinar ultricies massa id, dapibus elementum est. Sed posuere consectetur dui, pharetra lobortis magna laoreet quis. Maecenas ut varius orci, ac dignissim odio. Nulla volutpat non elit in feugiat. Donec magna diam, pharetra in fermentum blandit, iaculis non nulla.',
-                '250'
-              ),
-            ),
-          ),
-        ),
-      ),
+      body: _body(context),
     );
   }
 
-  Widget _roomCell() {
-    return const Card(
-      child: ListTile(
-        leading: FlutterLogo(
-          size: 72.0,
-        ),
-        title: Text('Single room'),
-        subtitle: Text(
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ornare lectus vel lacus bibendum, sit amet sollicitudin ex faucibus. Curabitur blandit consequat lorem nec facilisis. Vivamus mi quam, vehicula id viverra sit amet, gravida et risus. Phasellus condimentum faucibus efficitur. Pellentesque tincidunt purus nec magna elementum faucibus. Etiam sollicitudin rutrum tellus nec rutrum. Suspendisse et placerat elit. Aliquam id mollis leo, eget cursus ligula. Nam eget massa risus. Phasellus volutpat mauris et neque vulputate, ut vehicula neque dapibus.\n\nInteger at ultricies massa. Vivamus volutpat, ligula eget iaculis iaculis, urna orci egestas nunc, eget placerat mauris eros id velit. Donec neque dolor, ultrices nec ornare sit amet, eleifend vitae sapien. Mauris vitae malesuada neque. Aliquam sed hendrerit orci, non hendrerit metus. Maecenas ultrices dui vitae commodo dignissim. Nam in tellus sapien. Vestibulum vel congue risus. Cras efficitur tristique neque, ac porttitor velit. Vestibulum eget tristique turpis. Nam tincidunt est at erat dignissim, at porta sem iaculis. Nunc consectetur porta est, quis viverra augue vulputate ut. Nullam a ornare sem, sed vehicula orci. Sed at turpis accumsan, rutrum felis nec, sagittis dui. Phasellus a mauris metus.\n\nIn iaculis sapien non lectus venenatis, vitae varius lorem mollis. Morbi non eleifend felis, non lobortis tellus. Quisque in gravida velit, id volutpat orci. Proin hendrerit, diam et consectetur aliquet, velit erat mattis nisl, vitae condimentum eros dui ornare urna. Ut at mattis ante, id sollicitudin urna. Curabitur nunc diam, porttitor sed imperdiet eu, vehicula condimentum odio. Curabitur id sem nec purus gravida auctor at nec quam. Integer lacinia nunc vel tempor imperdiet. In ante nisl, pulvinar ultricies massa id, dapibus elementum est. Sed posuere consectetur dui, pharetra lobortis magna laoreet quis. Maecenas ut varius orci, ac dignissim odio. Nulla volutpat non elit in feugiat. Donec magna diam, pharetra in fermentum blandit, iaculis non nulla.',
-          maxLines: 3,
-        ),
-      ),
+  Widget _body(BuildContext context) {
+    return ListView.builder(
+      itemCount: roomsController.roomList.length,
+      itemBuilder: (context, index) {
+        var selectedRoom = roomsController.roomList[index];
+        var imgList = roomsController.imageUrls[index.toString()] ?? [];
+        var imgUrl = imgList.isNotEmpty ? imgList[0] : '';
+
+        return _customCell(
+          selectedRoom.title,
+          selectedRoom.description,
+          selectedRoom.price.toString(),
+          imgUrl,
+        );
+      },
     );
   }
 
-  Widget _customCell(String title, String desc, String price) {
+  Widget _customCell(String title, String desc, String price, String imgUrl) {
+    print('wow imgUrl is $imgUrl');
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            const Expanded(
-              flex: 2,
-              child: FlutterLogo(
-                size: 72.0,
-              ),
-            ),
+            Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: SizedBox(
+                    width: kIsWeb ? 300 : 150,
+                    height: kIsWeb ? 150 : 75,
+                    child: Center(
+                      child: CachedNetworkImage(
+                        // imageUrl: 'https://firebasestorage.googleapis.com/v0/b/hotel-booking-ee19d.appspot.com/o/images%2F0-0.jpg?alt=media&token=af023714-cb30-4bae-a772-2c733bfa702b',
+                        imageUrl: imgUrl,
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            Container(color: const Color(0xFFCCCCCC)),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                )),
             Expanded(
               flex: 4,
               child: _content(

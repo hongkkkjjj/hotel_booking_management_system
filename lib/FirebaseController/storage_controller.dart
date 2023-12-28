@@ -14,7 +14,7 @@ class StorageController {
 
     for (int index = 0; index < images.length; index++) {
       String fileName = '$id-$index';
-      String fileExtension = images[index].name.split('.').last;
+      String fileExtension = 'jpg';
 
       try {
         Uint8List fileBytes;
@@ -47,5 +47,15 @@ class StorageController {
     reader.readAsArrayBuffer(blob);
     await reader.onLoad.first;
     return reader.result as Uint8List;
+  }
+
+  Future<String> getImageUrl(String path) async {
+    try {
+      String url = await FirebaseStorage.instance.ref(path).getDownloadURL();
+      return url;
+    } catch (e) {
+      print('Error fetching image URL: $e');
+      rethrow; // or return a default error image URL
+    }
   }
 }
