@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:html' as html;
+
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:universal_html/html.dart' as html;
 
 class StorageController {
   final FirebaseStorage _storage = FirebaseStorage.instance;
