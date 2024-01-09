@@ -1,10 +1,21 @@
 
-class RoomData {
-  int id;
-  double price;
+import 'package:hotel_booking_management_system/Utils/utils.dart';
+
+class CalendarRoom {
+  String docId;
+  String id;
+  int price;
   DateTime date;
 
-  RoomData(this.id, this.price, this.date);
+  CalendarRoom(this.docId, this.id, this.price, this.date);
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'price': price,
+      'date': Utils.formatDate(date, "yyyy-MM-dd"),
+    };
+  }
 }
 
 class RoomType {
@@ -32,6 +43,14 @@ class RoomType {
       'beds': { for (var bed in beds) bed.bedName : bed.count },
     };
   }
+}
+
+class BookedRoom {
+  String id;
+  DateTime startDate;
+  DateTime endDate;
+
+  BookedRoom(this.id, this.startDate, this.endDate);
 }
 
 class BedType

@@ -17,6 +17,7 @@ class RoomsController extends GetxController {
   EventController eventController = EventController();
   List<CalendarEventData> eventList = <CalendarEventData>[].obs;
   List<RoomType> roomList = <RoomType>[].obs;
+  List<CalendarRoom> calendarRoomList = <CalendarRoom>[].obs;
   List<BedType> bedTypes = <BedType>[].obs;
   List<XFile> imageList = <XFile>[];
   var imageUrls = <String, List<String>>{}.obs;
@@ -79,6 +80,8 @@ class RoomsController extends GetxController {
       print('Room ID: ${room.id}, Title: ${room.title}, Price: ${room.price}');
       loadImages(room.id, room.imageCount);
     }
+
+    addCalendarRoomData();
   }
 
   void addCalendarEvent(List<CalendarEventData> list) {
@@ -107,41 +110,41 @@ class RoomsController extends GetxController {
 
   // endregion
 
-  void addDummyRoomData() {
+  // region Get Calendar Room Data
+
+
+
+  void addCalendarRoomData() {
     if (eventList.isNotEmpty) {
       return;
     }
 
-    final Random random = Random();
+    final Map<int, int> priceList = {};
 
-    // Default array with room ID and random default prices
-    final Map<int, double> defaultPrices = {
-      for (int i = 1; i <= 3; i++) i: 200 + random.nextInt(50).toDouble()
-    };
+    for (RoomType room in roomList) {
+      int roomId = int.parse(room.id);
+      priceList[roomId] = room.price;
+    }
 
-    // Generate dummy list
-    final List<RoomData> dummyList = List.generate(30, (index) {
-      DateTime date = DateTime.now().add(Duration(days: index));
-      int roomId = random.nextInt(3) + 1; // Random room ID (1-3)
-      double price = defaultPrices[roomId]! +
-          random.nextInt(20) -
-          10; // Adjust price randomly
-      return RoomData(roomId, price, date);
-    });
+    List<CalendarRoom> calendarRoomList = [];
 
-    groupAndSortRoomData(dummyList, defaultPrices);
+    groupAndSortRoomData(calendarRoomList, priceList);
   }
 
+  // endregion
+
+  // region Get event list
+
   void groupAndSortRoomData(
-      List<RoomData> dummyList, Map<int, double> defaultPrices) {
+      List<CalendarRoom> calendarRoomList, Map<int, int> defaultPrices) {
     final DateTime now = DateTime.now();
     final DateTime today = DateTime(now.year, now.month, now.day);
     final DateTime maxDate =
-        DateTime.now().add(const Duration(days: 2)); // 2 months from today
-    final Map<DateTime, List<RoomData>> groupedByDate = {};
+        DateTime.now().add(const Duration(days: 60)); // 2 months from today
+    final Map<DateTime, List<CalendarRoom>> groupedByDate = {};
 
     // Initial grouping by date
-    for (var room in dummyList) {
+    for (var room in calendarRoomList) {
       groupedByDate
           .putIfAbsent(DateTime(room.date.year, room.date.month, room.date.day),
               () => [])
@@ -156,10 +159,10 @@ class RoomsController extends GetxController {
       DateTime startTime = DateTime(date.year, date.month, date.day);
       DateTime endTime = DateTime(date.year, date.month, date.day, 23, 59, 59);
 
-      for (var roomId = 1; roomId <= 3; roomId++) {
-        var roomDataForDateAndId = groupedByDate[date]!.firstWhere(
-          (room) => room.id == roomId,
-          orElse: () => RoomData(roomId, defaultPrices[roomId]!, date),
+      for (var roomId = 0; roomId < roomList.length; roomId++) {
+        var roomDataForDateAndId = (groupedByDate[date] ?? []).firstWhere(
+              (room) => room.id == roomId.toString(),
+          orElse: () => CalendarRoom('', roomId.toString(), defaultPrices[roomId] ?? 0, date),
         );
 
         eventList.add(CalendarEventData(
@@ -190,10 +193,12 @@ class RoomsController extends GetxController {
 
   // endregion
 
+  // endregion
+
   // region Add new room
 
   void createNewRoom(BuildContext context) async {
-    var id = roomList.length.toString();
+    var id = (int.parse(roomList.last.id) + 1).toString();
     List<BedData> bedsList = [];
     for (int i = 0; i < bedTypes.length; i++) {
       String text = bedCountControllers[i].text;
@@ -295,7 +300,7 @@ class RoomsController extends GetxController {
 
   // endregion
 
-  // region Dialog
+  // region Adjust Price Dialog
 
   void showAdjustRoomPriceDialog(
       List<CalendarEventData<Object?>> events, DateTime selectedDate) {
@@ -363,7 +368,8 @@ class RoomsController extends GetxController {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        // Add your save logic here
+                        // firestoreController.
+                        // var room = calendarRoomList.firstWhereOrNull((room) => room.id == )
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.teal,
@@ -425,10 +431,10 @@ class RoomsController extends GetxController {
 
   Widget buildTitle(CalendarEventData event) {
     return SizedBox(
-      width: 50,
+      width: 100,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text(event.title),
+        padding: const EdgeInsets.symmetric(horizontal: 0),
+        child: Text(findRoomNameByEvent(event)),
       ),
     );
   }
@@ -471,6 +477,14 @@ class RoomsController extends GetxController {
         ),
       ),
     );
+  }
+
+  String findRoomNameByEvent(CalendarEventData event) {
+    String eventIdAsString = event.event.toString();
+
+    RoomType? room = roomList.firstWhereOrNull((room) => room.id == eventIdAsString);
+
+    return room?.title ?? 'Room not found';
   }
 
 // endregion

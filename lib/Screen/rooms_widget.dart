@@ -41,7 +41,6 @@ class RoomsScreen extends StatelessWidget {
                   label: 'Adjust Room Price',
                   backgroundColor: Colors.orange,
                   onPressed: () {
-                    roomsController.addDummyRoomData();
                     Get.toNamed(Routes.adjustPrice);
                   },
                 ),
