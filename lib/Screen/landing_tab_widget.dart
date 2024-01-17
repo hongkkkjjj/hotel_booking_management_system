@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Screen/admin_home_screen.dart';
 import 'package:hotel_booking_management_system/Screen/profile_widget.dart';
 import 'package:hotel_booking_management_system/Screen/rooms_widget.dart';
+import 'package:hotel_booking_management_system/Screen/user_home_screen.dart';
 
 import '../Controller/landing_tab_controller.dart';
 
@@ -58,6 +60,10 @@ class LandingTabScreen extends StatelessWidget {
           text: "Home",
         ),
         const Tab(
+          icon: Icon(Icons.local_hotel),
+          text: "Bookings",
+        ),
+        const Tab(
           icon: Icon(Icons.person),
           text: "Profile",
         ),
@@ -68,19 +74,20 @@ class LandingTabScreen extends StatelessWidget {
   List<Widget> _buildTabViews() {
     if (landingTabController.userType.value == UserType.admin) {
       return [
-        const Icon(Icons.home),
+        AdminHomeScreen(),
         RoomsScreen(),
         ProfileScreen()
       ];
     } else {
       return [
-        const Icon(Icons.home),
+        UserHomeScreen(),
+        RoomsScreen(),
         ProfileScreen(),
       ];
     }
   }
 
   int _getTabCount() {
-    return landingTabController.userType.value == UserType.admin ? 3 : 2;
+    return landingTabController.userType.value == UserType.admin ? 3 : 3;
   }
 }

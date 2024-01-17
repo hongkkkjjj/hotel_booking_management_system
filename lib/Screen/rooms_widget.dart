@@ -7,7 +7,7 @@ import '../Controller/rooms_controller.dart';
 import '../Widget/custom_elevated_button.dart';
 
 class RoomsScreen extends StatelessWidget {
-  final RoomsController roomsController = Get.put(RoomsController(), permanent: true);
+  final RoomsController roomsController = Get.find<RoomsController>();
 
   RoomsScreen({super.key});
 

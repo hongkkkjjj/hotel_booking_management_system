@@ -6,7 +6,7 @@ import '../Constant/app_route.dart';
 import '../Controller/login_controller.dart';
 
 class LoginWidget extends StatelessWidget {
-  final LoginController loginController = Get.put(LoginController());
+  final LoginController loginController = Get.find<LoginController>();
 
   LoginWidget({Key? key}) : super(key: key);
 
@@ -55,6 +55,10 @@ class LoginWidget extends StatelessWidget {
                     Get.toNamed(Routes.register);
                   },
                 ),
+                Switch(value: loginController.isAdmin.value, onChanged: (bool value) {
+                  loginController.isAdmin.toggle();
+
+                })
               ],
             ),
           ),

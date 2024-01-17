@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
-import 'package:hotel_booking_management_system/Constant/app_route.dart';
-import 'package:hotel_booking_management_system/Screen/login_widget.dart';
-import 'package:hotel_booking_management_system/Screen/manage_room_widget.dart';
+import 'Constant/app_route.dart';
+import 'Controller/home_controller.dart';
+import 'Controller/landing_tab_controller.dart';
+import 'Controller/login_controller.dart';
+import 'Controller/profile_controller.dart';
+import 'Controller/register_controller.dart';
+import 'Controller/rooms_controller.dart';
 import 'Screen/add_room_type_widget.dart';
 import 'Screen/adjust_room_price.dart';
 import 'Screen/landing_tab_widget.dart';
+import 'Screen/login_widget.dart';
+import 'Screen/manage_room_widget.dart';
 import 'Screen/profile_widget.dart';
 import 'Screen/register_widget.dart';
 import 'Screen/rooms_widget.dart';
@@ -48,9 +54,20 @@ class MyApp extends StatelessWidget {
     GetPage(name: Routes.updatePassword, page: () => UpdatePasswordScreen()),
   ];
 
+  void putController() {
+    Get.put(LoginController());
+    Get.put(RegisterController());
+    Get.put(LandingTabController());
+    Get.put(UserHomeController());
+    Get.put(UserController());
+    Get.put(RoomsController());
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    putController();
+
     return GetMaterialApp(
       title: 'Flutter Demo',
       initialRoute: Routes.login,

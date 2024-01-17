@@ -6,7 +6,7 @@ import '../Widget/custom_elevated_button.dart';
 import '../Widget/keyboard_dismiss_wrapper.dart';
 
 class RegisterScreen extends StatelessWidget {
-  final RegisterController registerController = Get.put(RegisterController());
+  final RegisterController registerController = Get.find<RegisterController>();
 
   RegisterScreen({super.key});
 

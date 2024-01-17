@@ -17,10 +17,14 @@ class RoomsController extends GetxController {
   EventController eventController = EventController();
   List<CalendarEventData> eventList = <CalendarEventData>[].obs;
   List<RoomType> roomList = <RoomType>[].obs;
+  List<RoomType> searchRoomList = <RoomType>[].obs;
   List<CalendarRoom> calendarRoomList = <CalendarRoom>[].obs;
   List<BedType> bedTypes = <BedType>[].obs;
   List<XFile> imageList = <XFile>[];
   var imageUrls = <String, List<String>>{}.obs;
+  Set<String> filterSet = {};
+  bool isSearch = false;
+  int searchDuration = 0;
 
   // Add room
   final TextEditingController titleController = TextEditingController();

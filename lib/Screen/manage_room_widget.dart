@@ -23,20 +23,29 @@ class ManageRoomScreen extends StatelessWidget {
   }
 
   Widget _body(BuildContext context) {
-    return ListView.builder(
-      itemCount: roomsController.roomList.length,
-      itemBuilder: (context, index) {
-        var selectedRoom = roomsController.roomList[index];
-        var imgList = roomsController.imageUrls[index.toString()] ?? [];
-        var imgUrl = imgList.isNotEmpty ? imgList[0] : '';
+    return Center(
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: kWebWidth),
+        child: ListView.builder(
+          itemCount: roomsController.isSearch
+              ? roomsController.searchRoomList.length
+              : roomsController.roomList.length,
+          itemBuilder: (context, index) {
+            var selectedRoom = roomsController.isSearch
+                ? roomsController.searchRoomList[index]
+                : roomsController.roomList[index];
+            var imgList = roomsController.imageUrls[index.toString()] ?? [];
+            var imgUrl = imgList.isNotEmpty ? imgList[0] : '';
 
-        return _customCell(
-          selectedRoom.title,
-          selectedRoom.description,
-          selectedRoom.price.toString(),
-          imgUrl,
-        );
-      },
+            return _customCell(
+              selectedRoom.title,
+              selectedRoom.description,
+              selectedRoom.price.toString(),
+              imgUrl,
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -71,11 +80,9 @@ class ManageRoomScreen extends StatelessWidget {
                 )),
             Expanded(
               flex: 4,
-              child: _content(
-                title,
-                desc,
-                price,
-              ),
+              child: roomsController.isSearch
+                  ? _searchContent(title, desc, price)
+                  : _content(title, desc, price),
             ),
           ],
         ),
@@ -106,6 +113,47 @@ class ManageRoomScreen extends StatelessWidget {
           const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
           Text(
             'RM $price',
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 12.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _searchContent(String title, String desc, String price) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 14.0,
+            ),
+          ),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
+          Text(
+            desc,
+            style: const TextStyle(fontSize: 12.0),
+            maxLines: 3,
+          ),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
+
+          Text(
+            'RM $price night',
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 12.0,
+            ),
+          ),
+          Text(
+            'RM ${int.parse(price) * roomsController.searchDuration} total',
             style: const TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 12.0,
