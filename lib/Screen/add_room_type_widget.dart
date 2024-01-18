@@ -1,6 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Controller/rooms_controller.dart';
+import 'package:hotel_booking_management_system/Structs/enums.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../Widget/custom_elevated_button.dart';
@@ -11,6 +14,7 @@ class AddRoomTypeScreen extends StatelessWidget {
   AddRoomTypeScreen({super.key});
 
   List<PickedFile> images = <PickedFile>[];
+  int roomSequence = 0;
 
   Future<void> loadAssets() async {
     List<XFile> resultList = <XFile>[];
@@ -26,6 +30,9 @@ class AddRoomTypeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var arg = Get.arguments;
+    roomSequence = arg["room_id"] ?? 0;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
@@ -37,12 +44,7 @@ class AddRoomTypeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: ElevatedButton(
-                  onPressed: loadAssets,
-                  child: const Text('Upload Room Images'),
-                ),
-              ),
+              imageViewSection(),
 
               const SizedBox(height: 16.0),
               TextField(
@@ -122,5 +124,49 @@ class AddRoomTypeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget imageViewSection() {
+    switch (roomsController.addRoomScreenType) {
+      case AddRoomScreenType.Add:
+        return Center(
+          child: ElevatedButton(
+            onPressed: loadAssets,
+            child: const Text('Upload Room Images'),
+          ),
+        );
+      case AddRoomScreenType.Edit:
+        return Center(
+          child: ElevatedButton(
+            onPressed: loadAssets,
+            child: const Text('Edit Images'),
+          ),
+        );
+      case AddRoomScreenType.View:
+        return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: roomsController.imageUrls[roomSequence.toString()]?.length ?? 0,
+            itemBuilder: (BuildContext context, int index) {
+              var imgList = roomsController.imageUrls[index.toString()] ?? [];
+
+              return SizedBox(
+                width: kIsWeb ? 400 : 150,
+                height: kIsWeb ? 200 : 75,
+                child: CachedNetworkImage(
+                  imageUrl: imgList[index],
+                  placeholder: (context, url) => const SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) =>
+                      Container(color: const Color(0xFFCCCCCC)),
+                  fit: BoxFit.fill,
+                ),
+              );
+            });
+    }
   }
 }

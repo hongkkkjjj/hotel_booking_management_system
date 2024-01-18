@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Constant/app_const.dart';
+import 'package:hotel_booking_management_system/Structs/enums.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../Constant/app_route.dart';
@@ -27,6 +28,7 @@ class RoomsController extends GetxController {
   int searchDuration = 0;
 
   // Add room
+  AddRoomScreenType addRoomScreenType = AddRoomScreenType.Add;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController squareFeetController = TextEditingController();
   final TextEditingController squareMeterController = TextEditingController();

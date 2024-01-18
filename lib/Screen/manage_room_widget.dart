@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Structs/enums.dart';
 
 import '../Constant/app_const.dart';
+import '../Constant/app_route.dart';
 import '../Controller/rooms_controller.dart';
 
 class ManageRoomScreen extends StatelessWidget {
@@ -38,6 +40,7 @@ class ManageRoomScreen extends StatelessWidget {
             var imgUrl = imgList.isNotEmpty ? imgList[0] : '';
 
             return _customCell(
+              index,
               selectedRoom.title,
               selectedRoom.description,
               selectedRoom.price.toString(),
@@ -49,48 +52,56 @@ class ManageRoomScreen extends StatelessWidget {
     );
   }
 
-  Widget _customCell(String title, String desc, String price, String imgUrl) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: SizedBox(
-                    width: kIsWeb ? 400 : 150,
-                    height: kIsWeb ? 200 : 75,
-                    child: CachedNetworkImage(
-                      imageUrl: imgUrl,
-                      placeholder: (context, url) => const SizedBox(
-                        width: 60,
-                        height: 60,
-                        child: Center(
-                          child: CircularProgressIndicator(),
+  Widget _customCell(int index, String title, String desc, String price,
+      String imgUrl) {
+    return InkWell(
+      onTap: () {
+        roomsController.addRoomScreenType = AddRoomScreenType.View;
+        Get.toNamed(Routes.addRooms, arguments: {'room_id': index});
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: SizedBox(
+                      width: kIsWeb ? 400 : 150,
+                      height: kIsWeb ? 200 : 75,
+                      child: CachedNetworkImage(
+                        imageUrl: imgUrl,
+                        placeholder: (context, url) =>
+                        const SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
                         ),
+                        errorWidget: (context, url, error) =>
+                            Container(color: const Color(0xFFCCCCCC)),
+                        fit: BoxFit.fill,
                       ),
-                      errorWidget: (context, url, error) =>
-                          Container(color: const Color(0xFFCCCCCC)),
-                      fit: BoxFit.fill,
                     ),
-                  ),
-                )),
-            Expanded(
-              flex: 4,
-              child: roomsController.isSearch
-                  ? _searchContent(title, desc, price)
-                  : _content(title, desc, price),
-            ),
-          ],
+                  )),
+              Expanded(
+                flex: 4,
+                child: roomsController.isSearch
+                    ? _searchContent(title, desc, price)
+                    : _content(index, title, desc, price),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _content(String title, String desc, String price) {
+  Widget _content(int index, String title, String desc, String price) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
       child: Column(
@@ -112,7 +123,7 @@ class ManageRoomScreen extends StatelessWidget {
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
           Text(
-            'RM $price',
+            'RM $price night',
             style: const TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 12.0,
@@ -144,7 +155,6 @@ class ManageRoomScreen extends StatelessWidget {
             maxLines: 3,
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
-
           Text(
             'RM $price night',
             style: const TextStyle(
