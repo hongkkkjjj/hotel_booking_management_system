@@ -21,7 +21,7 @@ class RoomsController extends GetxController {
   List<RoomType> searchRoomList = <RoomType>[].obs;
   List<CalendarRoom> calendarRoomList = <CalendarRoom>[].obs;
   List<BedType> bedTypes = <BedType>[].obs;
-  List<XFile> imageList = <XFile>[];
+  List<XFile> capturedImageList = <XFile>[];
   var imageUrls = <String, List<String>>{}.obs;
   Set<String> filterSet = {};
   bool isSearch = false;
@@ -217,7 +217,7 @@ class RoomsController extends GetxController {
     var room = RoomType(
       id,
       titleController.text,
-      imageList.length,
+      capturedImageList.length,
       int.parse(squareFeetController.text),
       int.parse(squareMeterController.text),
       descriptionController.text,
@@ -226,7 +226,7 @@ class RoomsController extends GetxController {
       int.parse(priceController.text),
     );
 
-    var result = await firestoreController.addRoomData(room, imageList);
+    var result = await firestoreController.addRoomData(room, capturedImageList);
 
     if (result) {
       clearEditingController();
@@ -239,9 +239,62 @@ class RoomsController extends GetxController {
     }
   }
 
+  void updateRoom(BuildContext context, int index) async {
+    String id = roomList[index].id;
+    List<BedData> bedsList = [];
+    for (int i = 0; i < bedTypes.length; i++) {
+      String text = bedCountControllers[i].text;
+      if (text.isNotEmpty && text != '0') {
+        int count = int.tryParse(text) ?? 0;
+        bedsList.add(BedData(bedTypes[i].bedName, count));
+      }
+    }
+
+    var room = RoomType(
+      id,
+      titleController.text,
+      capturedImageList.length,
+      int.parse(squareFeetController.text),
+      int.parse(squareMeterController.text),
+      descriptionController.text,
+      int.parse(guestCapController.text),
+      bedsList,
+      int.parse(priceController.text),
+    );
+
+    var result = await firestoreController.addRoomData(room, capturedImageList);
+
+    if (result) {
+      clearEditingController();
+      _showUploadDialog(context, '', 'Successfully update room detail', () {
+        getRoomData();
+        Get.offNamed(Routes.home);
+      });
+    } else {
+      _showUploadDialog(context, '', 'Something wrong is happened. Please try again.', null);
+    }
+  }
+
+  void addRoomDataToEditingController(int index) {
+    var selectedRoom = roomList[index];
+    titleController.text = selectedRoom.title;
+    squareFeetController.text = selectedRoom.squareFeet.toString();
+    squareMeterController.text = selectedRoom.squareMeter.toString();
+    descriptionController.text = selectedRoom.description;
+    guestCapController.text = selectedRoom.guestCapacity.toString();
+    priceController.text = selectedRoom.price.toString();
+
+    for (var i in selectedRoom.beds) {
+      var index = bedTypes.indexWhere((bed) => bed.bedName == i.bedName);
+      if (index >= 0) {
+        bedCountControllers[index].text = i.count.toString();
+      }
+    }
+  }
+
   void clearEditingController()
   {
-    imageList = [];
+    capturedImageList = [];
     titleController.text = '';
     squareFeetController.text = '';
     squareMeterController.text = '';
