@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Constant/app_route.dart';
 import 'package:hotel_booking_management_system/FirebaseController/firestore_controller.dart';
 
+import '../FirebaseController/auth.dart';
 import 'landing_tab_controller.dart';
 import 'profile_controller.dart';
 
@@ -29,7 +31,14 @@ class LoginController extends GetxController {
     Get.offNamed(Routes.home);
   }
 
-  Future<void> signIn() async {
-
+  Future<void> signIn(BuildContext context) async {
+    try {
+      await Auth().signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+    } on FirebaseAuthException catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Oops: ${e.message}')),
+      );
+    }
   }
 }

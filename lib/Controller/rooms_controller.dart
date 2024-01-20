@@ -230,11 +230,13 @@ class RoomsController extends GetxController {
 
     if (result) {
       clearEditingController();
+      if (!context.mounted) return;
       _showUploadDialog(context, '', 'Successfully add new room', () {
         getRoomData();
         Get.offNamed(Routes.home);
       });
     } else {
+      if (!context.mounted) return;
       _showUploadDialog(context, '', 'Something wrong is happened. Please try again.', null);
     }
   }
@@ -266,11 +268,13 @@ class RoomsController extends GetxController {
 
     if (result) {
       clearEditingController();
+      if (!context.mounted) return;
       _showUploadDialog(context, '', 'Successfully update room detail', () {
         getRoomData();
         Get.offNamed(Routes.home);
       });
     } else {
+      if (!context.mounted) return;
       _showUploadDialog(context, '', 'Something wrong is happened. Please try again.', null);
     }
   }

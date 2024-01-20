@@ -7,6 +7,7 @@ import '../Widget/keyboard_dismiss_wrapper.dart';
 
 class RegisterScreen extends StatelessWidget {
   final RegisterController registerController = Get.find<RegisterController>();
+  final _formKey = GlobalKey<FormState>();
 
   RegisterScreen({super.key});
 
@@ -26,45 +27,60 @@ class RegisterScreen extends StatelessWidget {
             child: Center(
               child: Container(
                 constraints: const BoxConstraints(maxWidth: kWebWidth),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextField(
-                      controller: registerController.nameController,
-                      decoration: const InputDecoration(labelText: 'Name'),
-                    ),
-                    const SizedBox(height: 16.0),
-                    TextField(
-                      controller: registerController.emailController,
-                      decoration: const InputDecoration(labelText: 'Email'),
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    const SizedBox(height: 16.0),
-                    TextField(
-                      controller: registerController.mobileController,
-                      decoration: const InputDecoration(labelText: 'Mobile Number'),
-                      keyboardType: TextInputType.phone,
-                    ),
-                    const SizedBox(height: 16.0),
-                    TextField(
-                      controller: registerController.passwordController,
-                      obscureText: true,
-                      decoration: const InputDecoration(labelText: 'Password'),
-                    ),
-                    const SizedBox(height: 16.0),
-                    TextField(
-                      controller: registerController.confirmPasswordController,
-                      obscureText: true,
-                      decoration: const InputDecoration(labelText: 'Confirm Password'),
-                    ),
-                    const SizedBox(height: 32.0),
-                    CustomElevatedButton(
-                      icon: Icons.person_add_alt_1,
-                      label: 'Register',
-                      backgroundColor: Colors.black54,
-                      onPressed: () => registerController.register(),
-                    ),
-                  ],
+                child: Form(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextFormField(
+                        key: _formKey,
+                        controller: registerController.nameController,
+                        decoration: const InputDecoration(labelText: 'Name'),
+                      ),
+                      const SizedBox(height: 16.0),
+                      TextFormField(
+                        key: _formKey,
+                        controller: registerController.emailController,
+                        decoration: const InputDecoration(labelText: 'Email'),
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                      const SizedBox(height: 16.0),
+                      TextFormField(
+                        key: _formKey,
+                        controller: registerController.mobileController,
+                        decoration: const InputDecoration(
+                            labelText: 'Mobile Number'),
+                        keyboardType: TextInputType.phone,
+                      ),
+                      const SizedBox(height: 16.0),
+                      TextFormField(
+                        key: _formKey,
+                        controller: registerController.passwordController,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                            labelText: 'Password'),
+                      ),
+                      const SizedBox(height: 16.0),
+                      TextFormField(
+                        key: _formKey,
+                        controller: registerController
+                            .confirmPasswordController,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                            labelText: 'Confirm Password'),
+                      ),
+                      const SizedBox(height: 32.0),
+                      CustomElevatedButton(
+                        icon: Icons.person_add_alt_1,
+                        label: 'Register',
+                        backgroundColor: Colors.black54,
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            registerController.createUserWithEmailAndPassword(context);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

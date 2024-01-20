@@ -9,6 +9,8 @@ class UserController extends GetxController {
   final TextEditingController existingPassword = TextEditingController();
   final TextEditingController newPassword = TextEditingController();
 
+
+
   void updateUserDetails(String newName, String newEmail, String newMobile) {
     name.value = newName;
     email.value = newEmail;

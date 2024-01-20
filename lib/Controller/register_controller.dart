@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../FirebaseController/auth.dart';
 
 class RegisterController extends GetxController {
   final TextEditingController nameController = TextEditingController();
@@ -18,6 +21,18 @@ class RegisterController extends GetxController {
 
     // For simplicity, just print the entered details
     print('Name: $name, Email: $email, Mobile: $mobile, Password: $password, Confirm Password: $confirmPassword');
+  }
+
+  Future<void> createUserWithEmailAndPassword(BuildContext context) async {
+    try {
+      await Auth().createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+
+    } on FirebaseAuthException catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Oops: ${e.message}')),
+      );
+    }
   }
 
   void clearAllController()
