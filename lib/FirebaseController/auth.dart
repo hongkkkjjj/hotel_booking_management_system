@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Controller/profile_controller.dart';
+import 'package:hotel_booking_management_system/FirebaseController/firestore_controller.dart';
 
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -21,8 +22,15 @@ class Auth {
     // userController.
   }
 
-  Future<void> createUserWithEmailAndPassword({required String email, required String password}) async {
-    await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+  Future<void> createUserWithEmailAndPassword({required String email, required String password, required }) async {
+    final UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+
+    final User? user = userCredential.user;
+
+    if (user != null) {
+      String uid = user.uid;
+      FirestoreController().addUserData(userId, userData);
+    }
   }
 
   Future<void> signOut() async {

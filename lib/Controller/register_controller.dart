@@ -26,7 +26,7 @@ class RegisterController extends GetxController {
   Future<void> createUserWithEmailAndPassword(BuildContext context) async {
     try {
       await Auth().createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
-
+      Auth().currentUser
     } on FirebaseAuthException catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

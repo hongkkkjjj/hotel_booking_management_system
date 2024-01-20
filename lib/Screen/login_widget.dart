@@ -53,7 +53,7 @@ class LoginWidget extends StatelessWidget {
                       ),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (value) {
-                        if ((value?.length ?? 0) > 6) {
+                        if ((value?.length ?? 0) >= 6) {
                           return null;
                         }
                         return "Invalid password length";

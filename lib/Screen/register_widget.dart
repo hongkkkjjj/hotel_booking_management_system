@@ -28,45 +28,75 @@ class RegisterScreen extends StatelessWidget {
               child: Container(
                 constraints: const BoxConstraints(maxWidth: kWebWidth),
                 child: Form(
+                  key: _formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextFormField(
-                        key: _formKey,
                         controller: registerController.nameController,
                         decoration: const InputDecoration(labelText: 'Name'),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please enter your name";
+                          }
+                        },
                       ),
                       const SizedBox(height: 16.0),
                       TextFormField(
-                        key: _formKey,
                         controller: registerController.emailController,
                         decoration: const InputDecoration(labelText: 'Email'),
                         keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (GetUtils.isEmail((value ?? ""))) {
+                            return null;
+                          }
+                          return "Please enter valid email";
+                        },
                       ),
                       const SizedBox(height: 16.0),
                       TextFormField(
-                        key: _formKey,
                         controller: registerController.mobileController,
                         decoration: const InputDecoration(
-                            labelText: 'Mobile Number'),
+                          labelText: 'Mobile Number',
+                        ),
                         keyboardType: TextInputType.phone,
+                        validator: (value) {
+                          if (GetUtils.isPhoneNumber(value ?? "")) {
+                            return null;
+                          }
+                          return "Please enter valid phone number";
+                        },
                       ),
                       const SizedBox(height: 16.0),
                       TextFormField(
-                        key: _formKey,
                         controller: registerController.passwordController,
                         obscureText: true,
                         decoration: const InputDecoration(
-                            labelText: 'Password'),
+                          labelText: 'Password',
+                        ),
+                        validator: (value) {
+                          if ((value?.length ?? 0) >= 6) {
+                            return null;
+                          }
+                          return "Invalid password length";
+                        },
                       ),
                       const SizedBox(height: 16.0),
                       TextFormField(
-                        key: _formKey,
-                        controller: registerController
-                            .confirmPasswordController,
+                        controller:
+                            registerController.confirmPasswordController,
                         obscureText: true,
                         decoration: const InputDecoration(
-                            labelText: 'Confirm Password'),
+                          labelText: 'Confirm Password',
+                        ),
+                        validator: (value) {
+                          if ((value?.length ?? 0) < 6) {
+                            return "Invalid password length";
+                          } else if (value != registerController.passwordController.text) {
+                            return "Password are not same";
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(height: 32.0),
                       CustomElevatedButton(
@@ -75,7 +105,8 @@ class RegisterScreen extends StatelessWidget {
                         backgroundColor: Colors.black54,
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            registerController.createUserWithEmailAndPassword(context);
+                            registerController
+                                .createUserWithEmailAndPassword(context);
                           }
                         },
                       ),
