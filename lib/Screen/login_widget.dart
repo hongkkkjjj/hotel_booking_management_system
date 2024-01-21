@@ -66,7 +66,7 @@ class LoginWidget extends StatelessWidget {
                       backgroundColor: Colors.teal,
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          loginController.login();
+                          loginController.signIn(context);
                         }
                       },
                     ),

@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../Constant/app_route.dart';
+import '../FirebaseController/auth.dart';
+
 class UserController extends GetxController {
   RxString name = ''.obs;
   RxString email = ''.obs;
@@ -8,8 +11,6 @@ class UserController extends GetxController {
 
   final TextEditingController existingPassword = TextEditingController();
   final TextEditingController newPassword = TextEditingController();
-
-
 
   void updateUserDetails(String newName, String newEmail, String newMobile) {
     name.value = newName;
@@ -23,9 +24,9 @@ class UserController extends GetxController {
     print('Updating password...');
   }
 
-  void logout() {
-    // Implement logout logic
-    // For simplicity, this is a placeholder
+  void logout() async {
     print('Logging out...');
+    await Auth().signOut();
+    Get.offAllNamed(Routes.login);
   }
 }

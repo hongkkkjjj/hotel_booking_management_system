@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Constant/app_route.dart';
 
 import '../Constant/app_const.dart';
+import '../Controller/landing_tab_controller.dart';
 import '../Controller/profile_controller.dart';
 import '../Widget/custom_elevated_button.dart';
 
 class ProfileScreen extends StatelessWidget {
   final UserController userController = Get.find<UserController>();
+  final LandingTabController landingTabController = Get.find<LandingTabController>();
 
   ProfileScreen({super.key});
 
@@ -29,8 +31,6 @@ class ProfileScreen extends StatelessWidget {
               onPressed: () {
                 // Call the logout method in UserController
                 userController.logout();
-                // Navigate back to the login screen
-                Get.offAllNamed(Routes.login);
               },
               child: const Text('Logout'),
             ),
@@ -49,12 +49,43 @@ class ProfileScreen extends StatelessWidget {
           child: Container(
             constraints: const BoxConstraints(maxWidth: kWebWidth),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('Name: ${userController.name}'),
-                Text('Email: ${userController.email}'),
-                Text('Mobile: ${userController.mobile}'),
-                const SizedBox(height: 60.0),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${userController.name}',
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(
+                            'Email: ${userController.email}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Mobile: ${userController.mobile}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 40.0),
                 CustomElevatedButton(
                   icon: Icons.vpn_key,
                   label: 'Update Password',
@@ -64,15 +95,18 @@ class ProfileScreen extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 16.0),
-                CustomElevatedButton(
-                  icon: Icons.add,
-                  label: 'Add New Admin',
-                  backgroundColor: Colors.teal,
-                  onPressed: () {
-                    Get.toNamed(Routes.register, arguments: {'is_admin': true});
-                  },
-                ),
-                const SizedBox(height: 16.0),
+                if (landingTabController.userType.value == UserType.admin)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: CustomElevatedButton(
+                      icon: Icons.add,
+                      label: 'Add New Admin',
+                      backgroundColor: Colors.teal,
+                      onPressed: () {
+                        Get.toNamed(Routes.register, arguments: {'is_admin': true});
+                      },
+                    ),
+                  ),
                 CustomElevatedButton(
                   icon: Icons.logout,
                   label: 'Logout',

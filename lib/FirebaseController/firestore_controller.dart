@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hotel_booking_management_system/FirebaseController/storage_controller.dart';
+import 'package:hotel_booking_management_system/Structs/user_data.dart';
 import 'package:hotel_booking_management_system/Utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -16,6 +17,30 @@ class FirestoreController {
       // Handle exceptions
       print(e.toString());
       return false;
+    }
+  }
+
+  Future<UserData?> getUserData(String userId) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> resultMap = await firestore
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (resultMap.exists) {
+        var data = resultMap.data();
+        String username = data!['name'] as String? ?? '-';
+        String mobileNo = data!['mobile_no'] as String? ?? '-';
+        bool isAdmin = data!['is_admin'] as bool? ?? false;
+
+        UserData userData = UserData(username, mobileNo, isAdmin);
+        return userData;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error: $e');
+      return null;
     }
   }
 
@@ -122,16 +147,17 @@ class FirestoreController {
     DateTime searchEndDate,
   ) async {
     try {
-      QuerySnapshot querySnapshot = await firestore
-          .collection('bookings')
-          .get();
+      QuerySnapshot querySnapshot =
+          await firestore.collection('bookings').get();
 
       Set<String> bookedRoomSet = querySnapshot.docs.map((doc) {
         var data = doc.data() as Map<String, dynamic>;
 
         String id = data['room_id'] as String? ?? '';
-        Timestamp startTimestamp = data['start_date'] as Timestamp? ?? Timestamp.fromDate(DateTime.now());
-        Timestamp endTimestamp = data['end_date'] as Timestamp? ?? Timestamp.fromDate(DateTime.now());
+        Timestamp startTimestamp = data['start_date'] as Timestamp? ??
+            Timestamp.fromDate(DateTime.now());
+        Timestamp endTimestamp = data['end_date'] as Timestamp? ??
+            Timestamp.fromDate(DateTime.now());
 
         DateTime startDate = startTimestamp.toDate();
         DateTime endDate = endTimestamp.toDate();
