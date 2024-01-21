@@ -6,10 +6,12 @@ import 'package:hotel_booking_management_system/Structs/enums.dart';
 
 import '../Constant/app_const.dart';
 import '../Constant/app_route.dart';
+import '../Controller/landing_tab_controller.dart';
 import '../Controller/rooms_controller.dart';
 
 class ManageRoomScreen extends StatelessWidget {
   final RoomsController roomsController = Get.find<RoomsController>();
+  final LandingTabController landingTabController = Get.find<LandingTabController>();
 
   ManageRoomScreen({super.key});
 
@@ -56,7 +58,11 @@ class ManageRoomScreen extends StatelessWidget {
       String imgUrl) {
     return InkWell(
       onTap: () {
-        roomsController.addRoomScreenType = AddRoomScreenType.View;
+        if (landingTabController.userType.value == UserType.guest) {
+          roomsController.addRoomScreenType = AddRoomScreenType.View;
+        } else {
+          roomsController.addRoomScreenType = AddRoomScreenType.Edit;
+        }
         Get.toNamed(Routes.addRooms, arguments: {'room_id': index});
       },
       child: Card(
