@@ -105,8 +105,9 @@ class RegisterScreen extends StatelessWidget {
                         backgroundColor: Colors.black54,
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
+                            showLoaderDialog(context);
                             registerController
-                                .createUserWithEmailAndPassword(context);
+                                .createUserInAuthAndFirestore(context, false);
                           }
                         },
                       ),
@@ -118,6 +119,22 @@ class RegisterScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  showLoaderDialog(BuildContext context){
+    AlertDialog alert=AlertDialog(
+      content: Row(
+        children: [
+          const CircularProgressIndicator(),
+          Container(margin: const EdgeInsets.only(left: 7),child:const Text("Loading..." )),
+        ],),
+    );
+    showDialog(barrierDismissible: false,
+      context:context,
+      builder:(BuildContext context){
+        return alert;
+      },
     );
   }
 }

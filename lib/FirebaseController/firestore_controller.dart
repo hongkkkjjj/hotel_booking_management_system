@@ -8,12 +8,14 @@ import '../Structs/room_data.dart';
 class FirestoreController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<void> addUserData(String userId, Map<String, dynamic> userData) async {
+  Future<bool> addUserData(String userId, Map<String, dynamic> userData) async {
     try {
       await firestore.collection('users').doc(userId).set(userData);
+      return true;
     } catch (e) {
       // Handle exceptions
       print(e.toString());
+      return false;
     }
   }
 

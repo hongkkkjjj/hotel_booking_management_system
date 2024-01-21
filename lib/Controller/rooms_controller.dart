@@ -1,10 +1,7 @@
-import 'dart:math';
-
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hotel_booking_management_system/Constant/app_const.dart';
 import 'package:hotel_booking_management_system/Structs/enums.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -309,6 +306,7 @@ class RoomsController extends GetxController {
 
   void _showUploadDialog(BuildContext context, String title, String content, VoidCallback? onDialogClose) {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
