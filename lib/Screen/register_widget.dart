@@ -11,15 +11,20 @@ class RegisterScreen extends StatelessWidget {
 
   RegisterScreen({super.key});
 
+  bool isAdmin = false;
+
   @override
   Widget build(BuildContext context) {
+    var arg = Get.arguments;
+    isAdmin = arg["is_admin"] ?? false;
+
     registerController.clearAllController();
 
     return KeyboardDismissWrapper(
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.teal,
-          title: const Text('Register'),
+          title: Text((isAdmin) ? 'Add new admin' : 'Register'),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -107,7 +112,7 @@ class RegisterScreen extends StatelessWidget {
                           if (_formKey.currentState!.validate()) {
                             showLoaderDialog(context);
                             registerController
-                                .createUserInAuthAndFirestore(context, false);
+                                .createUserInAuthAndFirestore(context, isAdmin);
                           }
                         },
                       ),

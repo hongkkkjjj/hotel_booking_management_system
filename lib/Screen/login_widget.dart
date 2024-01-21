@@ -76,7 +76,7 @@ class LoginWidget extends StatelessWidget {
                       label: 'Register',
                       backgroundColor: Colors.black54,
                       onPressed: () {
-                        Get.toNamed(Routes.register);
+                        Get.toNamed(Routes.register, arguments: {'is_admin': false});
                       },
                     ),
                     Obx(() => Switch(

@@ -4,6 +4,7 @@ import 'package:hotel_booking_management_system/Constant/app_route.dart';
 
 import '../Constant/app_const.dart';
 import '../Controller/profile_controller.dart';
+import '../Widget/custom_elevated_button.dart';
 
 class ProfileScreen extends StatelessWidget {
   final UserController userController = Get.find<UserController>();
@@ -42,10 +43,6 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: const Text('Profile'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -58,28 +55,31 @@ class ProfileScreen extends StatelessWidget {
                 Text('Email: ${userController.email}'),
                 Text('Mobile: ${userController.mobile}'),
                 const SizedBox(height: 60.0),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(50),
-                  ),
-                  icon: const Icon(Icons.vpn_key),
+                CustomElevatedButton(
+                  icon: Icons.vpn_key,
+                  label: 'Update Password',
+                  backgroundColor: Colors.orange,
                   onPressed: () {
                     Get.toNamed(Routes.updatePassword);
                   },
-                  label: const Text('Update Password'),
                 ),
                 const SizedBox(height: 16.0),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size.fromHeight(50),
-                    backgroundColor: Colors.red,
-                  ),
-                  icon: const Icon(Icons.logout),
+                CustomElevatedButton(
+                  icon: Icons.add,
+                  label: 'Add New Admin',
+                  backgroundColor: Colors.teal,
+                  onPressed: () {
+                    Get.toNamed(Routes.register, arguments: {'is_admin': true});
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                CustomElevatedButton(
+                  icon: Icons.logout,
+                  label: 'Logout',
+                  backgroundColor: Colors.red,
                   onPressed: () {
                     _showLogoutConfirmationDialog(context);
                   },
-                  label: const Text('Logout'),
                 ),
               ],
             ),

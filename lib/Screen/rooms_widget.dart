@@ -14,10 +14,6 @@ class RoomsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: const Text('Rooms'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
