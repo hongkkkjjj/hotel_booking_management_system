@@ -164,39 +164,45 @@ class AddRoomTypeScreen extends StatelessWidget {
       if (roomsController.addRoomScreenType == AddRoomScreenType.Edit) {
         return CachedNetworkImage(
           imageUrl: imgStr,
-          placeholder: (context, url) => const SizedBox(
+          placeholder: (context, url) =>
+          const SizedBox(
             width: 60,
             height: 60,
             child: Center(
               child: CircularProgressIndicator(),
             ),
           ),
-          errorWidget: (context, url, error) => Image.asset(
-            'assets/images/img_no_img.png',
-            fit: BoxFit.fill,
-          ),
+          errorWidget: (context, url, error) =>
+              Image.asset(
+                'assets/images/img_no_img.png',
+                fit: BoxFit.fill,
+              ),
           fit: BoxFit.fill,
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 2),
-              image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
-            ),
-          ),
+          imageBuilder: (context, imageProvider) =>
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black, width: 2),
+                  image: DecorationImage(
+                      image: imageProvider, fit: BoxFit.fill),
+                ),
+              ),
         );
       } else {
         return CachedNetworkImage(
           imageUrl: imgStr,
-          placeholder: (context, url) => const SizedBox(
+          placeholder: (context, url) =>
+          const SizedBox(
             width: 60,
             height: 60,
             child: Center(
               child: CircularProgressIndicator(),
             ),
           ),
-          errorWidget: (context, url, error) => Image.asset(
-            'assets/images/img_no_img.png',
-            fit: BoxFit.fill,
-          ),
+          errorWidget: (context, url, error) =>
+              Image.asset(
+                'assets/images/img_no_img.png',
+                fit: BoxFit.fill,
+              ),
           fit: BoxFit.fill,
         );
       }
@@ -243,7 +249,8 @@ class AddRoomTypeScreen extends StatelessWidget {
                   child: imageWidget(imgStr),
                 );
               },
-              separatorBuilder: (context, index) => const SizedBox(
+              separatorBuilder: (context, index) =>
+              const SizedBox(
                 width: 10,
               ),
             ),
@@ -257,20 +264,20 @@ class AddRoomTypeScreen extends StatelessWidget {
 
     if (roomsController.addRoomScreenType == AddRoomScreenType.View) {
       return List.generate(roomsController.roomList[roomSequence].beds.length,
-          (index) {
-        var bedType = roomsController.roomList[roomSequence].beds[index];
-        return TextField(
-          enabled: isTextFieldEnable,
-          keyboardType: TextInputType.number,
-          controller: roomsController.bedCountControllers[index],
-          decoration: InputDecoration(
-            labelText: 'Bed Count for ${bedType.bedName}',
-            labelStyle: const TextStyle(color: Colors.black),
-            disabledBorder: InputBorder.none,
-          ),
-          style: const TextStyle(color: Colors.black),
-        );
-      });
+              (index) {
+            var bedType = roomsController.roomList[roomSequence].beds[index];
+            return TextField(
+              enabled: isTextFieldEnable,
+              keyboardType: TextInputType.number,
+              controller: roomsController.bedCountControllers[index],
+              decoration: InputDecoration(
+                labelText: 'Bed Count for ${bedType.bedName}',
+                labelStyle: const TextStyle(color: Colors.black),
+                disabledBorder: InputBorder.none,
+              ),
+              style: const TextStyle(color: Colors.black),
+            );
+          });
     } else {
       return List.generate(roomsController.bedTypes.length, (index) {
         var bedType = roomsController.bedTypes[index];
@@ -292,28 +299,52 @@ class AddRoomTypeScreen extends StatelessWidget {
   }
 
   Widget bottomButton(BuildContext context, int index) {
-    if (roomsController.addRoomScreenType == AddRoomScreenType.View) {
-      return const SizedBox(height: 0);
-    } else {
-      bool isAddRoom =
-          roomsController.addRoomScreenType == AddRoomScreenType.Add;
-
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 24.0),
-        child: CustomElevatedButton(
-          icon: Icons.save,
-          label: (isAddRoom) ? 'Save' : 'Update',
-          backgroundColor: Colors.teal,
-          onPressed: () {
-            FocusManager.instance.primaryFocus?.unfocus();
-            if (isAddRoom) {
-              roomsController.createNewRoom(context);
-            } else {
-              roomsController.updateRoom(context, index);
-            }
-          },
-        ),
-      );
+    String buttonText() {
+      switch (roomsController.addRoomScreenType) {
+        case AddRoomScreenType.Add:
+          return "Save";
+        case AddRoomScreenType.Edit:
+          return "Edit";
+        case AddRoomScreenType.View:
+          return "Book Now";
+        default:
+          return "Unknown";
+      }
     }
+
+    IconData buttonIcon() {
+      if (roomsController.addRoomScreenType == AddRoomScreenType.View) {
+        return Icons.book;
+      } else {
+        return Icons.save;
+      }
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24.0),
+      child: CustomElevatedButton(
+        icon: buttonIcon(),
+        label: buttonText(),
+        backgroundColor: Colors.teal,
+        onPressed: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+
+          switch (roomsController.addRoomScreenType) {
+            case AddRoomScreenType.Add:
+              roomsController.createNewRoom(context);
+              break;
+
+            case AddRoomScreenType.Edit:
+              roomsController.updateRoom(context, index);
+              break;
+
+            case AddRoomScreenType.View:
+              break;
+            default:
+              break;
+          }
+        },
+      ),
+    );
   }
 }

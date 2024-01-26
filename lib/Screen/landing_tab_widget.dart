@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Screen/admin_home_screen.dart';
 import 'package:hotel_booking_management_system/Screen/profile_widget.dart';
 import 'package:hotel_booking_management_system/Screen/rooms_widget.dart';
+import 'package:hotel_booking_management_system/Screen/trips_widget.dart';
 import 'package:hotel_booking_management_system/Screen/user_home_screen.dart';
 
 import '../Controller/landing_tab_controller.dart';
@@ -81,7 +82,7 @@ class LandingTabScreen extends StatelessWidget {
     } else {
       return [
         UserHomeScreen(),
-        RoomsScreen(),
+        TripsScreen(),
         ProfileScreen(),
       ];
     }

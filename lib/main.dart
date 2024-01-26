@@ -11,6 +11,7 @@ import 'Controller/rooms_controller.dart';
 import 'Screen/add_room_type_widget.dart';
 import 'Screen/adjust_room_price.dart';
 import 'Screen/landing_tab_widget.dart';
+import 'Screen/loading_screen.dart';
 import 'Screen/login_widget.dart';
 import 'Screen/manage_room_widget.dart';
 import 'Screen/profile_widget.dart';
@@ -36,6 +37,8 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
 
   final List<GetPage> appPages = [
+    // Loading
+    GetPage(name: Routes.loading, page: () => LoadingScreen()),
     // Login
     GetPage(name: Routes.login, page: () => LoginWidget()),
     GetPage(name: Routes.register, page: () => RegisterScreen()),
@@ -70,7 +73,7 @@ class MyApp extends StatelessWidget {
 
     return GetMaterialApp(
       title: 'Flutter Demo',
-      initialRoute: Routes.login,
+      initialRoute: Routes.loading,
       getPages: appPages,
       theme: ThemeData(
         primarySwatch: Colors.teal,

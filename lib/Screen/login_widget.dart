@@ -66,6 +66,7 @@ class LoginWidget extends StatelessWidget {
                       backgroundColor: Colors.teal,
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
+                          showLoaderDialog(context);
                           loginController.signIn(context);
                         }
                       },
@@ -91,6 +92,22 @@ class LoginWidget extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  showLoaderDialog(BuildContext context){
+    AlertDialog alert=AlertDialog(
+      content: Row(
+        children: [
+          const CircularProgressIndicator(),
+          Container(margin: const EdgeInsets.only(left: 7),child:const Text("Loading..." )),
+        ],),
+    );
+    showDialog(barrierDismissible: false,
+      context:context,
+      builder:(BuildContext context){
+        return alert;
+      },
     );
   }
 }

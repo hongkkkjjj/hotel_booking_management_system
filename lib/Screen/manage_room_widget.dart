@@ -11,7 +11,8 @@ import '../Controller/rooms_controller.dart';
 
 class ManageRoomScreen extends StatelessWidget {
   final RoomsController roomsController = Get.find<RoomsController>();
-  final LandingTabController landingTabController = Get.find<LandingTabController>();
+  final LandingTabController landingTabController =
+      Get.find<LandingTabController>();
 
   ManageRoomScreen({super.key});
 
@@ -20,7 +21,7 @@ class ManageRoomScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
-        title: const Text('Manage rooms'),
+        title: Text((roomsController.isSearch) ? 'Rooms' : 'Manage rooms'),
       ),
       body: _body(context),
     );
@@ -54,8 +55,8 @@ class ManageRoomScreen extends StatelessWidget {
     );
   }
 
-  Widget _customCell(int index, String title, String desc, String price,
-      String imgUrl) {
+  Widget _customCell(
+      int index, String title, String desc, String price, String imgUrl) {
     return InkWell(
       onTap: () {
         if (landingTabController.userType.value == UserType.guest) {
@@ -78,20 +79,26 @@ class ManageRoomScreen extends StatelessWidget {
                     child: SizedBox(
                       width: kIsWeb ? 400 : 150,
                       height: kIsWeb ? 200 : 75,
-                      child: CachedNetworkImage(
-                        imageUrl: imgUrl,
-                        placeholder: (context, url) =>
-                        const SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                        errorWidget: (context, url, error) =>
-                            Container(color: const Color(0xFFCCCCCC)),
-                        fit: BoxFit.fill,
-                      ),
+                      child: (imgUrl.isNotEmpty)
+                          ? CachedNetworkImage(
+                              imageUrl: imgUrl,
+                              placeholder: (context, url) => const SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Image.asset(
+                                'assets/images/img_no_img.png',
+                                fit: BoxFit.fill,
+                              ),
+                              fit: BoxFit.fill,
+                            )
+                          : Image.asset(
+                              'assets/images/img_no_img.png',
+                              fit: BoxFit.fill,
+                            ),
                     ),
                   )),
               Expanded(

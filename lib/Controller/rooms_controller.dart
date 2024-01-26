@@ -96,15 +96,15 @@ class RoomsController extends GetxController {
 
   // region Get room image
 
-  Future<void> loadImages(String bedTypeId, int imageCount) async {
+  Future<void> loadImages(String roomId, int imageCount) async {
     try {
       // Ensure a list exists for this bedTypeId, otherwise create it
-      imageUrls[bedTypeId] = imageUrls[bedTypeId] ?? [];
+      imageUrls[roomId] = imageUrls[roomId] ?? [];
 
       for (int i = 0; i < imageCount; i++) {
-        String imagePath = 'images/$bedTypeId-$i.jpg';
+        String imagePath = 'images/$roomId-$i.jpg';
         String url = await StorageController().getImageUrl(imagePath);
-        imageUrls[bedTypeId]?.add(url); // Add the URL to the list for this bedTypeId
+        imageUrls[roomId]?.add(url); // Add the URL to the list for this bedTypeId
       }
     } catch (e) {
       print('Error loading images: $e');

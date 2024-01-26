@@ -37,7 +37,7 @@ class UserHomeController extends GetxController {
     roomsController.searchRoomList = roomsController.roomList.where((room) => !resultSet.contains(room.id)).toList();
     roomsController.isSearch = true;
 
-    roomsController.searchDuration = formattedEndDate.difference(formattedStartDate).inDays;
+    roomsController.searchDuration = formattedEndDate.difference(formattedStartDate).inDays + 1;
 
     print("wow day is ${roomsController.searchDuration}");
     print("wow roomlist length ${roomsController.searchRoomList.length}");

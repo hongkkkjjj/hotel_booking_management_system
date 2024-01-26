@@ -19,31 +19,37 @@ class LoginController extends GetxController {
     try {
       await Auth().signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
-      var user = Auth().currentUser;
+      User? user = Auth().currentUser;
       if (user != null) {
-        UserData? userData = await FirestoreController().getUserData(user.uid);
-
-        if (userData != null) {
-          clearAllController();
-          Get.find<LandingTabController>().setUserType(
-              (userData.isAdmin) ? UserType.admin : UserType.guest);
-          Get.find<UserController>().updateUserDetails(
-              userData.username, user.email ?? "-", userData.mobileNo);
-          if (!context.mounted) return;
-          Navigator.of(context).pop();
-          Get.toNamed(Routes.home);
-        } else {
-          if (!context.mounted) return;
-          Navigator.of(context).pop();
-          _showUploadDialog(context, '',
-              'Something wrong is happened. Please try again.', null);
-        }
+        if (!context.mounted) return;
+        await retrieveUserData(context, user);
       }
     } on FirebaseAuthException catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Oops: ${e.message}')),
       );
+    }
+  }
+
+  Future<void> retrieveUserData(BuildContext context, User user) async {
+    UserData? userData = await FirestoreController().getUserData(user.uid);
+
+    if (userData != null) {
+      clearAllController();
+      Get.find<LandingTabController>().setUserType(
+          (userData.isAdmin) ? UserType.admin : UserType.guest);
+      Get.find<UserController>().updateUserDetails(
+          userData.username, user.email ?? "-", userData.mobileNo);
+
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+      Get.offAllNamed(Routes.home);
+    } else {
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+      _showUploadDialog(context, '',
+          'Something wrong is happened. Please try again.', null);
     }
   }
 
