@@ -139,7 +139,7 @@ class ManageRoomScreen extends StatelessWidget {
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
           Text(
-            'RM $price night',
+            'RM$price night',
             style: const TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 12.0,
@@ -172,14 +172,14 @@ class ManageRoomScreen extends StatelessWidget {
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
           Text(
-            'RM $price night',
+            'RM$price night',
             style: const TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 12.0,
             ),
           ),
           Text(
-            'RM ${int.parse(price) * roomsController.searchDuration} total',
+            'RM${int.parse(price) * roomsController.searchDuration} total',
             style: const TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 12.0,

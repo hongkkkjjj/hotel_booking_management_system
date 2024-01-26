@@ -109,7 +109,7 @@ class PricingCell extends StatelessWidget {
           children: [
             Expanded(
               child: AutoSizeText(
-                'RM ${lowestEvent.title}',
+                'RM${lowestEvent.title}',
                 maxLines: 1,
                 minFontSize: 6,
                 textAlign: kIsWeb ? TextAlign.center : TextAlign.start,

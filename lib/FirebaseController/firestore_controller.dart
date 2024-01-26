@@ -184,4 +184,15 @@ class FirestoreController {
       return {};
     }
   }
+
+  Future<bool> addBookingData(Map<String, dynamic> bookingData) async {
+    try {
+      await firestore.collection('bookings').doc().set(bookingData);
+      return true;
+    } catch (e) {
+      // Handle exceptions
+      print(e.toString());
+      return false;
+    }
+  }
 }

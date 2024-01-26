@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CustomElevatedButton extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
   final String label;
   final Color? backgroundColor;
   final VoidCallback? onPressed;
 
   const CustomElevatedButton({super.key,
-    required this.icon,
+    this.icon,
     required this.label,
     this.backgroundColor,
     this.onPressed,

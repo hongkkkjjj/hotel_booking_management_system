@@ -359,7 +359,7 @@ class UserHomeScreen extends StatelessWidget {
                 return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: roomCard(
-                        imageUrl, room.title, 'RM ${room.price.toString()}'));
+                        imageUrl, room.title, 'RM${room.price.toString()}'));
               },
             ),
           ),

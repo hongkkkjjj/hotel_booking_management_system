@@ -514,7 +514,7 @@ class RoomsController extends GetxController {
           ),
         ),
         style: const TextStyle(color: Colors.black),
-        controller: TextEditingController(text: 'RM ${event.title}'),
+        controller: TextEditingController(text: 'RM${event.title}'),
       ),
     );
   }
