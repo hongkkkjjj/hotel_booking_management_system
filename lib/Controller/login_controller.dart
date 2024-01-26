@@ -20,14 +20,19 @@ class LoginController extends GetxController {
       await Auth().signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
       User? user = Auth().currentUser;
+
+      if (!context.mounted) return;
       if (user != null) {
-        if (!context.mounted) return;
         await retrieveUserData(context, user);
+      } else {
+        Navigator.of(context).pop();
       }
     } on FirebaseAuthException catch (e) {
+      print(e.message);
       if (!context.mounted) return;
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Oops: ${e.message}')),
+        const SnackBar(content: Text('Email or password incorrect.')),
       );
     }
   }

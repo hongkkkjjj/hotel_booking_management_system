@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Controller/home_controller.dart';
 import 'package:hotel_booking_management_system/Structs/enums.dart';
 
 import '../Constant/app_const.dart';
@@ -13,6 +14,7 @@ class ManageRoomScreen extends StatelessWidget {
   final RoomsController roomsController = Get.find<RoomsController>();
   final LandingTabController landingTabController =
       Get.find<LandingTabController>();
+  final UserHomeController userHomeController = Get.find<UserHomeController>();
 
   ManageRoomScreen({super.key});
 
@@ -64,7 +66,8 @@ class ManageRoomScreen extends StatelessWidget {
         } else {
           roomsController.addRoomScreenType = AddRoomScreenType.Edit;
         }
-        Get.toNamed(Routes.addRooms, arguments: {'room_id': index});
+        userHomeController.roomSequence = index;
+        Get.toNamed(Routes.addRooms);
       },
       child: Card(
         child: Padding(

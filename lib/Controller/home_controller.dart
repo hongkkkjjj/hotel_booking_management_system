@@ -8,6 +8,7 @@ class UserHomeController extends GetxController {
   var startDate = DateTime.now().obs;
   var endDate = DateTime.now().add(const Duration(days: 1)).obs;
   var guestCount = 1.obs;
+  var roomSequence = 0;
 
   FirestoreController firestoreController = FirestoreController();
 

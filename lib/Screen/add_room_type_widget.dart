@@ -6,10 +6,13 @@ import 'package:hotel_booking_management_system/Controller/rooms_controller.dart
 import 'package:hotel_booking_management_system/Structs/enums.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../Constant/app_route.dart';
+import '../Controller/home_controller.dart';
 import '../Widget/custom_elevated_button.dart';
 
 class AddRoomTypeScreen extends StatelessWidget {
   final RoomsController roomsController = Get.find<RoomsController>();
+  final UserHomeController userHomeController = Get.find<UserHomeController>();
 
   AddRoomTypeScreen({super.key});
 
@@ -30,8 +33,7 @@ class AddRoomTypeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var arg = Get.arguments;
-    roomSequence = arg["room_id"] ?? 0;
+    roomSequence = userHomeController.roomSequence;
     bool isTextFieldEnable =
         roomsController.addRoomScreenType != AddRoomScreenType.View;
 
@@ -232,26 +234,32 @@ class AddRoomTypeScreen extends StatelessWidget {
         var selectedImgList =
             roomsController.imageUrls[roomSequence.toString()] ?? [];
 
-        return InkWell(
-          onTap: loadAssets,
-          child: SizedBox(
-            width: kIsWeb ? 600 : 400,
-            height: kIsWeb ? 300 : 200,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: selectedImgList.length,
-              itemBuilder: (BuildContext context, int index) {
-                var imgStr = selectedImgList[index];
+        return Center(
+          child: InkWell(
+            onTap: () {
+              if (roomsController.addRoomScreenType == AddRoomScreenType.Edit) {
+                loadAssets();
+              }
+            },
+            child: SizedBox(
+              width: kIsWeb ? 700 : 400,
+              height: kIsWeb ? 300 : 200,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: selectedImgList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  var imgStr = selectedImgList[index];
 
-                return SizedBox(
-                  width: kIsWeb ? 600 : 400,
-                  height: kIsWeb ? 300 : 200,
-                  child: imageWidget(imgStr),
-                );
-              },
-              separatorBuilder: (context, index) =>
-              const SizedBox(
-                width: 10,
+                  return SizedBox(
+                    width: kIsWeb ? 600 : 400,
+                    height: kIsWeb ? 300 : 200,
+                    child: imageWidget(imgStr),
+                  );
+                },
+                separatorBuilder: (context, index) =>
+                const SizedBox(
+                  width: 10,
+                ),
               ),
             ),
           ),
@@ -339,7 +347,9 @@ class AddRoomTypeScreen extends StatelessWidget {
               break;
 
             case AddRoomScreenType.View:
+              Get.toNamed(Routes.booking);
               break;
+
             default:
               break;
           }

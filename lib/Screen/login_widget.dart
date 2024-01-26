@@ -9,7 +9,7 @@ class LoginWidget extends StatelessWidget {
   final LoginController loginController = Get.find<LoginController>();
   final _formKey = GlobalKey<FormState>();
 
-  LoginWidget({Key? key}) : super(key: key);
+  LoginWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -9,4 +9,5 @@ class Routes {
   static const profile = '/profile';
   static const updatePassword = '/update_password';
   static const manageRoom = '/manage_room';
+  static const booking = '/confirm_booking';
 }

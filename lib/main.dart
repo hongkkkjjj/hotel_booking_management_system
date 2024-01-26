@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Screen/booking_widget.dart';
 import 'Constant/app_route.dart';
 import 'Controller/home_controller.dart';
 import 'Controller/landing_tab_controller.dart';
@@ -18,6 +19,7 @@ import 'Screen/profile_widget.dart';
 import 'Screen/register_widget.dart';
 import 'Screen/rooms_widget.dart';
 import 'Screen/update_password_widget.dart';
+import 'Utils/custom_scroll_behaviour.dart';
 import 'Widget/keyboard_dismiss_wrapper.dart';
 import 'firebase_options.dart';
 
@@ -52,6 +54,9 @@ class MyApp extends StatelessWidget {
     GetPage(name: Routes.adjustPrice, page: () => AdjustRoomPriceScreen()),
     GetPage(name: Routes.manageRoom, page: () => ManageRoomScreen()),
 
+    // Booking
+    GetPage(name: Routes.booking, page: () => BookingScreen()),
+
     // Profile
     GetPage(name: Routes.profile, page: () => ProfileScreen()),
     GetPage(name: Routes.updatePassword, page: () => UpdatePasswordScreen()),
@@ -75,6 +80,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       initialRoute: Routes.loading,
       getPages: appPages,
+      scrollBehavior: MyCustomScrollBehavior(),
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),

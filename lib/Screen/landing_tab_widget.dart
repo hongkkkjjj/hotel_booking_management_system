@@ -16,23 +16,22 @@ class LandingTabScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: _getTabCount(),
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.teal,
-            bottom: TabBar(
-              labelColor: Colors.indigo,
-              indicatorColor: Colors.indigo,
-              unselectedLabelColor: Colors.indigo[200],
-              tabs: _buildTabs(),
-            ),
-            title: const Text('Tabs Demo'),
+    return DefaultTabController(
+      length: _getTabCount(),
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.teal,
+          bottom: TabBar(
+            labelColor: Colors.indigo,
+            indicatorColor: Colors.indigo,
+            unselectedLabelColor: Colors.indigo[200],
+            tabs: _buildTabs(),
           ),
-          body: TabBarView(
-            children: _buildTabViews(),
-          ),
+          title: const Text('Welcome to Hotel Name'),
+        ),
+        body: TabBarView(
+          children: _buildTabViews(),
         ),
       ),
     );

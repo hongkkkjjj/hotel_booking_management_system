@@ -345,7 +345,7 @@ class UserHomeScreen extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: kIsWeb ? 500 : 300,
+            height: kIsWeb ? 400 : 300,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: min(roomsController.roomList.length, 5),
