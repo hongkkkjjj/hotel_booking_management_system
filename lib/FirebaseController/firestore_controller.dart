@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hotel_booking_management_system/FirebaseController/storage_controller.dart';
+import 'package:hotel_booking_management_system/Structs/booking_data.dart';
 import 'package:hotel_booking_management_system/Structs/user_data.dart';
 import 'package:hotel_booking_management_system/Utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,10 +23,8 @@ class FirestoreController {
 
   Future<UserData?> getUserData(String userId) async {
     try {
-      DocumentSnapshot<Map<String, dynamic>> resultMap = await firestore
-          .collection('users')
-          .doc(userId)
-          .get();
+      DocumentSnapshot<Map<String, dynamic>> resultMap =
+          await firestore.collection('users').doc(userId).get();
 
       if (resultMap.exists) {
         var data = resultMap.data();
@@ -193,6 +192,35 @@ class FirestoreController {
       // Handle exceptions
       print(e.toString());
       return false;
+    }
+  }
+
+  Future<List<BookingData>> getBookingDataForUser(String userId) async {
+    try {
+      QuerySnapshot querySnapshot =
+          await firestore.collection('bookings').where('user_id', isEqualTo: userId).get();
+      List<BookingData> bookingList = querySnapshot.docs.map((doc) {
+        var data = doc.data() as Map<String, dynamic>;
+        
+        String roomId = data['room_id'] as String? ?? '';
+        Timestamp endDate = data['end_date'] as Timestamp? ??
+            Timestamp.fromDate(DateTime.now());
+        Timestamp startDate = data['start_date'] as Timestamp? ??
+            Timestamp.fromDate(DateTime.now());
+        int totalPrice = data['total_price'] as int? ?? 0;
+        int guestCount = data['guest_count'] as int? ?? 0;
+        int status = data['status'] as int? ?? 0;
+        String updateBy = data['updated_by'] as String? ?? '';
+        Timestamp lastUpdate = data['last_update'] as Timestamp? ??
+            Timestamp.fromDate(DateTime.now());
+
+        return BookingData(startDate, endDate, roomId, status, totalPrice,
+            userId, guestCount, updateBy, lastUpdate);
+      }).toList();
+      return bookingList;
+    } catch (e) {
+      print(e.toString());
+      return [];
     }
   }
 }

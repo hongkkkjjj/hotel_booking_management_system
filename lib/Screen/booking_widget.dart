@@ -205,6 +205,7 @@ class BookingScreen extends StatelessWidget {
                         int.parse(roomsController.priceController.text) *
                             roomsController.searchDuration,
                         user?.uid ?? '',
+                        homeController.guestCount.value,
                         userName,
                         Timestamp.fromDate(DateTime.now()),
                       );

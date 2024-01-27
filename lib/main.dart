@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Controller/trips_controller.dart';
 import 'package:hotel_booking_management_system/Screen/booking_widget.dart';
 import 'Constant/app_route.dart';
 import 'Controller/home_controller.dart';
@@ -69,6 +70,7 @@ class MyApp extends StatelessWidget {
     Get.put(UserHomeController());
     Get.put(UserController());
     Get.put(RoomsController());
+    Get.put(TripsController());
   }
 
   // This widget is the root of your application.

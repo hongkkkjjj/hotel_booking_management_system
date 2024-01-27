@@ -7,10 +7,11 @@ class BookingData {
   int status;
   int totalPrice;
   String userId;
+  int guestCount;
   String updateBy = '';
   Timestamp lastUpdate;
 
-  BookingData(this.startDate, this.endDate, this.roomId, this.status, this.totalPrice, this.userId, this.updateBy, this.lastUpdate);
+  BookingData(this.startDate, this.endDate, this.roomId, this.status, this.totalPrice, this.userId, this.guestCount, this.updateBy, this.lastUpdate);
 
   Map<String, dynamic> toMap() {
     return {
@@ -20,6 +21,7 @@ class BookingData {
       'last_update': lastUpdate,
       'status': status,
       'total_price': totalPrice,
+      'guest_count': guestCount,
       'updated_by': updateBy,
       'user_id': userId,
     };
