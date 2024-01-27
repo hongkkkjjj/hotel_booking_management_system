@@ -6,8 +6,8 @@ import 'package:hotel_booking_management_system/FirebaseController/firestore_con
 import 'package:hotel_booking_management_system/Structs/booking_data.dart';
 
 class UserHomeController extends GetxController {
-  var startDate = DateTime.now().obs;
-  var endDate = DateTime.now().add(const Duration(days: 1)).obs;
+  var startDate = DateTime.now().add(const Duration(days: 1)).obs;
+  var endDate = DateTime.now().add(const Duration(days: 2)).obs;
   var guestCount = 1.obs;
   var roomSequence = 0;
 

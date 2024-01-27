@@ -54,7 +54,7 @@ class UserHomeScreen extends StatelessWidget {
                   final DateTime? picked = await showDatePicker(
                     context: context,
                     initialDate: homeController.startDate.value,
-                    firstDate: DateTime.now(),
+                    firstDate: DateTime.now().add(const Duration(days: 1)),
                     lastDate: DateTime(2101),
                   );
                   if (picked != null &&
@@ -76,7 +76,7 @@ class UserHomeScreen extends StatelessWidget {
                     final DateTime? picked = await showDatePicker(
                       context: context,
                       initialDate: homeController.endDate.value,
-                      firstDate: DateTime.now(),
+                      firstDate: DateTime.now().add(const Duration(days: 2)),
                       lastDate: DateTime(2101),
                     );
                     if (picked != null &&
