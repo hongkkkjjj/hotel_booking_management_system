@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hotel_booking_management_system/Utils/utils.dart';
 
 class CalendarRoom {
@@ -28,8 +29,10 @@ class RoomType {
   int guestCapacity;
   List<BedData> beds;
   int price;
+  String updateBy = '';
+  Timestamp lastUpdate;
 
-  RoomType(this.id, this.title, this.imageCount, this.squareFeet, this.squareMeter, this.description, this.guestCapacity, this.beds, this.price);
+  RoomType(this.id, this.title, this.imageCount, this.squareFeet, this.squareMeter, this.description, this.guestCapacity, this.beds, this.price, this.updateBy, this.lastUpdate);
 
   Map<String, dynamic> toMap() {
     return {
@@ -40,6 +43,8 @@ class RoomType {
       'square_feet': squareFeet,
       'square_meter': squareMeter,
       'price': price,
+      'update_by': updateBy,
+      'last_update': lastUpdate,
       'beds': { for (var bed in beds) bed.bedName : bed.count },
     };
   }

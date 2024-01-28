@@ -81,6 +81,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       initialRoute: Routes.loading,
+      debugShowCheckedModeBanner: false,
       getPages: appPages,
       scrollBehavior: MyCustomScrollBehavior(),
       theme: ThemeData(

@@ -14,7 +14,6 @@ class LoginController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   FirestoreController firestoreController = FirestoreController();
-  RxBool isAdmin = false.obs;
 
   Future<void> signIn(BuildContext context) async {
     try {

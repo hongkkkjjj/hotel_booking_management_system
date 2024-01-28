@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Controller/rooms_controller.dart';
 import 'package:hotel_booking_management_system/Structs/enums.dart';
+import 'package:hotel_booking_management_system/Utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../Constant/app_route.dart';
@@ -141,6 +142,19 @@ class AddRoomTypeScreen extends StatelessWidget {
               const SizedBox(height: 8.0),
               // Input fields for bed count for each bed type
               ...bedSection(context, isTextFieldEnable),
+              const SizedBox(height: 24.0),
+              if (roomsController.addRoomScreenType == AddRoomScreenType.Edit)
+                Row(
+                  children: [
+                    const Spacer(),
+                    Column(
+                      children: [
+                        Text('Last updated by: ${roomsController.updateBy}'),
+                        Text('At ${Utils.formatDate(roomsController.lastUpdate.toDate(), 'yyyy MMM dd')}'),
+                      ],
+                    )
+                  ],
+                ),
               const SizedBox(height: 24.0),
               bottomButton(context, roomSequence),
             ],
@@ -310,9 +324,9 @@ class AddRoomTypeScreen extends StatelessWidget {
     String buttonText() {
       switch (roomsController.addRoomScreenType) {
         case AddRoomScreenType.Add:
-          return "Save";
+          return "Add";
         case AddRoomScreenType.Edit:
-          return "Edit";
+          return "Save";
         case AddRoomScreenType.View:
           return "Book Now";
         default:

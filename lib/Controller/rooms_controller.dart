@@ -1,7 +1,9 @@
 import 'package:calendar_view/calendar_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Controller/profile_controller.dart';
 import 'package:hotel_booking_management_system/Structs/enums.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -35,6 +37,8 @@ class RoomsController extends GetxController {
   List<TextEditingController> bedCountControllers = [];
   FocusNode squareMeterFocusNode = FocusNode();
   FocusNode squareFeetFocusNode = FocusNode();
+  String updateBy = '';
+  Timestamp lastUpdate = Timestamp.now();
 
   FirestoreController firestoreController = FirestoreController();
 
@@ -104,7 +108,8 @@ class RoomsController extends GetxController {
       for (int i = 0; i < imageCount; i++) {
         String imagePath = 'images/$roomId-$i.jpg';
         String url = await StorageController().getImageUrl(imagePath);
-        imageUrls[roomId]?.add(url); // Add the URL to the list for this bedTypeId
+        imageUrls[roomId]
+            ?.add(url); // Add the URL to the list for this bedTypeId
       }
     } catch (e) {
       print('Error loading images: $e');
@@ -114,8 +119,6 @@ class RoomsController extends GetxController {
   // endregion
 
   // region Get Calendar Room Data
-
-
 
   void addCalendarRoomData() {
     if (eventList.isNotEmpty) {
@@ -164,8 +167,9 @@ class RoomsController extends GetxController {
 
       for (var roomId = 0; roomId < roomList.length; roomId++) {
         var roomDataForDateAndId = (groupedByDate[date] ?? []).firstWhere(
-              (room) => room.id == roomId.toString(),
-          orElse: () => CalendarRoom('', roomId.toString(), defaultPrices[roomId] ?? 0, date),
+          (room) => room.id == roomId.toString(),
+          orElse: () => CalendarRoom(
+              '', roomId.toString(), defaultPrices[roomId] ?? 0, date),
         );
 
         eventList.add(CalendarEventData(
@@ -181,8 +185,7 @@ class RoomsController extends GetxController {
     }
 
     for (var event in eventList) {
-      print(
-        "Date: ${event.date}, ID: ${event.event}, Price: ${event.title}");
+      print("Date: ${event.date}, ID: ${event.event}, Price: ${event.title}");
     }
     print('event count ${eventList.length}');
     addCalendarEvent(eventList);
@@ -201,6 +204,7 @@ class RoomsController extends GetxController {
   // region Add new room
 
   void createNewRoom(BuildContext context) async {
+    final userController = Get.find<UserController>();
     var id = (int.parse(roomList.last.id) + 1).toString();
     List<BedData> bedsList = [];
     for (int i = 0; i < bedTypes.length; i++) {
@@ -221,6 +225,8 @@ class RoomsController extends GetxController {
       int.parse(guestCapController.text),
       bedsList,
       int.parse(priceController.text),
+      userController.name.value,
+      Timestamp.now(),
     );
 
     var result = await firestoreController.addRoomData(room, capturedImageList);
@@ -234,11 +240,13 @@ class RoomsController extends GetxController {
       });
     } else {
       if (!context.mounted) return;
-      _showUploadDialog(context, '', 'Something wrong is happened. Please try again.', null);
+      _showUploadDialog(
+          context, '', 'Something wrong is happened. Please try again.', null);
     }
   }
 
   void updateRoom(BuildContext context, int index) async {
+    final userController = Get.find<UserController>();
     String id = roomList[index].id;
     List<BedData> bedsList = [];
     for (int i = 0; i < bedTypes.length; i++) {
@@ -259,6 +267,8 @@ class RoomsController extends GetxController {
       int.parse(guestCapController.text),
       bedsList,
       int.parse(priceController.text),
+      userController.name.value,
+      Timestamp.now(),
     );
 
     var result = await firestoreController.addRoomData(room, capturedImageList);
@@ -272,7 +282,8 @@ class RoomsController extends GetxController {
       });
     } else {
       if (!context.mounted) return;
-      _showUploadDialog(context, '', 'Something wrong is happened. Please try again.', null);
+      _showUploadDialog(
+          context, '', 'Something wrong is happened. Please try again.', null);
     }
   }
 
@@ -285,6 +296,7 @@ class RoomsController extends GetxController {
     guestCapController.text = selectedRoom.guestCapacity.toString();
     priceController.text = selectedRoom.price.toString();
 
+
     for (var i in selectedRoom.beds) {
       var index = bedTypes.indexWhere((bed) => bed.bedName == i.bedName);
       if (index >= 0) {
@@ -293,8 +305,7 @@ class RoomsController extends GetxController {
     }
   }
 
-  void clearEditingController()
-  {
+  void clearEditingController() {
     capturedImageList = [];
     titleController.text = '';
     squareFeetController.text = '';
@@ -304,7 +315,8 @@ class RoomsController extends GetxController {
     priceController.text = '';
   }
 
-  void _showUploadDialog(BuildContext context, String title, String content, VoidCallback? onDialogClose) {
+  void _showUploadDialog(BuildContext context, String title, String content,
+      VoidCallback? onDialogClose) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -543,7 +555,8 @@ class RoomsController extends GetxController {
   String findRoomNameByEvent(CalendarEventData event) {
     String eventIdAsString = event.event.toString();
 
-    RoomType? room = roomList.firstWhereOrNull((room) => room.id == eventIdAsString);
+    RoomType? room =
+        roomList.firstWhereOrNull((room) => room.id == eventIdAsString);
 
     return room?.title ?? 'Room not found';
   }

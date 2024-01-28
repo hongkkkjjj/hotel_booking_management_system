@@ -71,6 +71,8 @@ class FirestoreController {
         int squareFeet = data['square_feet'] as int? ?? 0;
         int squareMeter = data['square_meter'] as int? ?? 0;
         int price = data['price'] as int? ?? 0;
+        String updateBy = data['update_by'] as String? ?? "";
+        Timestamp lastUpdate = data['last_update'] as Timestamp? ?? Timestamp.now();
 
         var bedsMap = data['beds'] as Map<String, dynamic>? ?? {};
         List<BedData> beds = bedsMap.entries.map((entry) {
@@ -79,8 +81,19 @@ class FirestoreController {
           return BedData(bedName, count);
         }).toList();
 
-        return RoomType(doc.id, title, imageCount, squareFeet, squareMeter,
-            description, guestCapacity, beds, price);
+        return RoomType(
+          doc.id,
+          title,
+          imageCount,
+          squareFeet,
+          squareMeter,
+          description,
+          guestCapacity,
+          beds,
+          price,
+          updateBy,
+          lastUpdate,
+        );
       }).toList();
       return rooms;
     } catch (e) {
@@ -197,11 +210,13 @@ class FirestoreController {
 
   Future<List<BookingData>> getBookingDataForUser(String userId) async {
     try {
-      QuerySnapshot querySnapshot =
-          await firestore.collection('bookings').where('user_id', isEqualTo: userId).get();
+      QuerySnapshot querySnapshot = await firestore
+          .collection('bookings')
+          .where('user_id', isEqualTo: userId)
+          .get();
       List<BookingData> bookingList = querySnapshot.docs.map((doc) {
         var data = doc.data() as Map<String, dynamic>;
-        
+
         String roomId = data['room_id'] as String? ?? '';
         Timestamp endDate = data['end_date'] as Timestamp? ??
             Timestamp.fromDate(DateTime.now());

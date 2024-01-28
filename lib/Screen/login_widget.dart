@@ -80,11 +80,6 @@ class LoginWidget extends StatelessWidget {
                         Get.toNamed(Routes.register, arguments: {'is_admin': false});
                       },
                     ),
-                    Obx(() => Switch(
-                        value: loginController.isAdmin.value,
-                        onChanged: (bool value) {
-                          loginController.isAdmin.toggle();
-                        })),
                   ],
                 ),
               ),
