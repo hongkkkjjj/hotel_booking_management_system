@@ -34,14 +34,14 @@ class AddRoomTypeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    roomSequence = userHomeController.roomSequence;
+    roomSequence = userHomeController.roomSequence.value;
     bool isTextFieldEnable =
         roomsController.addRoomScreenType != AddRoomScreenType.View;
 
     roomsController.clearEditingController();
 
     if (roomsController.addRoomScreenType != AddRoomScreenType.Add) {
-      roomsController.addRoomDataToEditingController(roomSequence);
+      roomsController.addRoomDataToEditingController(roomSequence, userHomeController.selectedRoom.value);
     }
 
     return Scaffold(

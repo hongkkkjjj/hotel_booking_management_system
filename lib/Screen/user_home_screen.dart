@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Controller/home_controller.dart';
 import 'package:hotel_booking_management_system/Controller/rooms_controller.dart';
+import 'package:hotel_booking_management_system/Controller/trips_controller.dart';
 
 class UserHomeScreen extends StatelessWidget {
   UserHomeController homeController = Get.find<UserHomeController>();
@@ -148,6 +149,8 @@ class UserHomeScreen extends StatelessWidget {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
+                  Get.find<TripsController>().selectedTrips.value = null;
+                  homeController.selectedRoom.value = null;
                   homeController.performSearch(context);
                 },
                 child: const Text('Search'),
@@ -259,6 +262,8 @@ class UserHomeScreen extends StatelessWidget {
         Expanded(
           child: ElevatedButton(
             onPressed: () {
+              Get.find<TripsController>().selectedTrips.value = null;
+              homeController.selectedRoom.value = null;
               homeController.performSearch(context);
             },
             child: const Text('Search'),

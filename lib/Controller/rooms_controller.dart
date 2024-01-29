@@ -287,8 +287,13 @@ class RoomsController extends GetxController {
     }
   }
 
-  void addRoomDataToEditingController(int index) {
-    var selectedRoom = roomList[index];
+  void addRoomDataToEditingController(int index, RoomType? room) {
+    RoomType selectedRoom;
+    if (room != null) {
+      selectedRoom = room;
+    } else {
+      selectedRoom = roomList[index];
+    }
     titleController.text = selectedRoom.title;
     squareFeetController.text = selectedRoom.squareFeet.toString();
     squareMeterController.text = selectedRoom.squareMeter.toString();

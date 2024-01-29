@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Constant/app_route.dart';
@@ -13,7 +14,6 @@ class TripsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    tripsController.selectedTrips.value = null;
     tripsController.getTripsData();
 
     return Scaffold(
@@ -33,44 +33,21 @@ class TripsScreen extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 300,
+              height: kIsWeb ? 300 : 200,
               child: Obx(
                 () => ListView.builder(
                   itemCount: tripsController.currentTrips.length,
                   itemBuilder: (context, index) {
-                    BookingData selectedTrip = tripsController.currentTrips[index];
-                    BookingStatus status =
-                        mapIntToBookingStatus(selectedTrip.status);
-                    int guestCount = selectedTrip.guestCount;
+                    BookingData selectedTrip =
+                        tripsController.currentTrips[index];
 
-                    return InkWell(
-                      onTap: () {
-                        tripsController.selectedTrips.value = selectedTrip;
-                        Get.toNamed(Routes.booking);
-                      },
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            children: [
-                              Text(
-                                  '${Utils.formatDate(selectedTrip.startDate.toDate(), 'yyyy MMM dd')} - ${Utils.formatDate(selectedTrip.endDate.toDate(), 'MMM dd')}'),
-                              const SizedBox(width: 24),
-                              Text(
-                                  '$guestCount ${(guestCount > 1) ? 'Person' : 'Persons'}'),
-                              const Spacer(),
-                              Text('Status: ${status.statusString}'),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
+                    return detailCard(selectedTrip);
                   },
                 ),
               ),
             ),
             const Padding(
-              padding: EdgeInsets.only(bottom: 24.0),
+              padding: EdgeInsets.symmetric(vertical: 24.0),
               child: Text(
                 'Past Trips',
                 style: TextStyle(
@@ -80,37 +57,57 @@ class TripsScreen extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 300,
+              height: kIsWeb ? 300 : 200,
               child: Obx(
                 () => ListView.builder(
                   itemCount: tripsController.pastTrips.length,
                   itemBuilder: (context, index) {
-                    var selectedTrip = tripsController.pastTrips[index];
-                    BookingStatus status =
-                        mapIntToBookingStatus(selectedTrip.status);
-                    int guestCount = selectedTrip.guestCount;
+                    BookingData selectedTrip = tripsController.pastTrips[index];
 
-                    return Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          children: [
-                            Text(
-                                '${Utils.formatDate(selectedTrip.startDate.toDate(), 'yyyy MMM dd')} - ${Utils.formatDate(selectedTrip.endDate.toDate(), 'MMM dd')}'),
-                            const SizedBox(width: 24),
-                            Text(
-                                '$guestCount ${(guestCount > 1) ? 'Person' : 'Persons'}'),
-                            const Spacer(),
-                            Text('Status: ${status.statusString}'),
-                          ],
-                        ),
-                      ),
-                    );
+                    return detailCard(selectedTrip);
                   },
                 ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget detailCard(BookingData selectedTrip) {
+    BookingStatus status = mapIntToBookingStatus(selectedTrip.status);
+    int guestCount = selectedTrip.guestCount;
+
+    return Card(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12.0),
+        onTap: () {
+          tripsController.selectedTrips.value = selectedTrip;
+          Get.toNamed(Routes.booking);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (!kIsWeb)
+                Text(
+                    '${Utils.formatDate(selectedTrip.startDate.toDate(), 'yyyy MMM dd')} - ${Utils.formatDate(selectedTrip.endDate.toDate(), 'MMM dd')}'),
+              Row(
+                children: [
+                  if (kIsWeb)
+                    Text(
+                        '${Utils.formatDate(selectedTrip.startDate.toDate(), 'yyyy MMM dd')} - ${Utils.formatDate(selectedTrip.endDate.toDate(), 'MMM dd')}'),
+                  const SizedBox(width: 24),
+                  Text(
+                      '$guestCount ${(guestCount > 1) ? 'Person' : 'Persons'}'),
+                  const Spacer(),
+                  Text('Status: ${status.statusString}'),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

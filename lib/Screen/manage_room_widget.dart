@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Controller/home_controller.dart';
 import 'package:hotel_booking_management_system/Structs/enums.dart';
+import 'package:hotel_booking_management_system/Structs/room_data.dart';
 
 import '../Constant/app_const.dart';
 import '../Constant/app_route.dart';
@@ -44,21 +45,14 @@ class ManageRoomScreen extends StatelessWidget {
             var imgList = roomsController.imageUrls[index.toString()] ?? [];
             var imgUrl = imgList.isNotEmpty ? imgList[0] : '';
 
-            return _customCell(
-              index,
-              selectedRoom.title,
-              selectedRoom.description,
-              selectedRoom.price.toString(),
-              imgUrl,
-            );
+            return _customCell(index, selectedRoom, imgUrl);
           },
         ),
       ),
     );
   }
 
-  Widget _customCell(
-      int index, String title, String desc, String price, String imgUrl) {
+  Widget _customCell(int index, RoomType selectedRoom, String imgUrl) {
     return InkWell(
       onTap: () {
         if (landingTabController.userType.value == UserType.guest) {
@@ -66,7 +60,8 @@ class ManageRoomScreen extends StatelessWidget {
         } else {
           roomsController.addRoomScreenType = AddRoomScreenType.Edit;
         }
-        userHomeController.roomSequence = index;
+        userHomeController.roomSequence.value = index;
+        userHomeController.selectedRoom.value = selectedRoom;
         Get.toNamed(Routes.addRooms);
       },
       child: Card(
@@ -107,8 +102,13 @@ class ManageRoomScreen extends StatelessWidget {
               Expanded(
                 flex: 4,
                 child: roomsController.isSearch
-                    ? _searchContent(title, desc, price)
-                    : _content(index, title, desc, price),
+                    ? _searchContent(selectedRoom.title,
+                        selectedRoom.description, selectedRoom.price.toString())
+                    : _content(
+                        index,
+                        selectedRoom.title,
+                        selectedRoom.description,
+                        selectedRoom.price.toString()),
               ),
             ],
           ),

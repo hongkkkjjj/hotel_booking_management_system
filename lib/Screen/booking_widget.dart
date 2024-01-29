@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Structs/booking_data.dart';
+import 'package:hotel_booking_management_system/Structs/room_data.dart';
 import 'package:hotel_booking_management_system/Utils/utils.dart';
 
 import '../Constant/app_const.dart';
@@ -23,13 +24,18 @@ class BookingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int roomSequence = homeController.roomSequence;
+    int roomSequence = homeController.roomSequence.value;
     List<String> selectedImgList =
         roomsController.imageUrls[roomSequence.toString()] ?? [];
     BookingData bookingData;
+    String roomTitle;
 
     if (tripsController.selectedTrips.value != null) {
       bookingData = tripsController.selectedTrips.value!;
+
+      roomTitle = roomsController.roomList
+          .firstWhere((room) => room.id == bookingData.roomId)
+          .title;
     } else {
       DateTime formattedStartDate = DateTime(
           homeController.startDate.value.year,
@@ -48,14 +54,16 @@ class BookingScreen extends StatelessWidget {
         Timestamp.fromDate(formattedEndDate),
         roomsController.searchRoomList[roomSequence].id,
         0,
-
+        int.parse(roomsController.priceController.text),
         int.parse(roomsController.priceController.text) *
             roomsController.searchDuration,
+        roomsController.searchDuration,
         user?.uid ?? '',
         homeController.guestCount.value,
         userName,
         Timestamp.fromDate(DateTime.now()),
       );
+      roomTitle = roomsController.titleController.text;
     }
 
     return Scaffold(
@@ -128,30 +136,30 @@ class BookingScreen extends StatelessWidget {
                                 width: 96,
                                 child: (selectedImgList.isNotEmpty)
                                     ? CachedNetworkImage(
-                                  imageUrl: selectedImgList[0],
-                                  placeholder: (context, url) =>
-                                  const SizedBox(
-                                    width: 48,
-                                    height: 48,
-                                    child: Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset(
+                                        imageUrl: selectedImgList[0],
+                                        placeholder: (context, url) =>
+                                            const SizedBox(
+                                          width: 48,
+                                          height: 48,
+                                          child: Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Image.asset(
+                                          'assets/images/img_no_img.png',
+                                          fit: BoxFit.fill,
+                                        ),
+                                        fit: BoxFit.fill,
+                                      )
+                                    : Image.asset(
                                         'assets/images/img_no_img.png',
                                         fit: BoxFit.fill,
                                       ),
-                                  fit: BoxFit.fill,
-                                )
-                                    : Image.asset(
-                                  'assets/images/img_no_img.png',
-                                  fit: BoxFit.fill,
-                                ),
                               ),
                               const SizedBox(width: 16),
                               Text(
-                                roomsController.titleController.text,
+                                roomTitle,
                                 style: const TextStyle(
                                   fontSize: 24,
                                 ),
@@ -173,14 +181,14 @@ class BookingScreen extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                'RM${roomsController.priceController.text} x ${roomsController.searchDuration} night.',
+                                'RM${bookingData.pricePerNight} x ${bookingData.duration} night.',
                                 style: const TextStyle(
                                   fontSize: 17,
                                 ),
                               ),
                               const Spacer(),
                               Text(
-                                'RM${int.parse(roomsController.priceController.text) * roomsController.searchDuration}',
+                                'RM${bookingData.pricePerNight * bookingData.duration}',
                                 style: const TextStyle(
                                   fontSize: 17,
                                 ),
@@ -191,38 +199,89 @@ class BookingScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24.0),
-                    child: Divider(),
-                  ),
-                  const Text(
-                    'Cancellation rules',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'You can still cancel before ${Utils.formatTimestamp(bookingData.startDate, 'MMM dd')}.',
-                    style: const TextStyle(
-                      fontSize: 17,
-                    ),
-                  ),
+                  cancelSection(bookingData),
                   const SizedBox(height: 24),
-                  CustomElevatedButton(
-                    label: 'Confirm',
-                    backgroundColor: Colors.teal,
-                    onPressed: () {
-                      homeController.confirmBookingOrder(context, bookingData);
-                    },
-                  ),
+                  if (bookingData.status == 0)
+                    CustomElevatedButton(
+                      label: (tripsController.selectedTrips.value != null)
+                          ? 'Cancel'
+                          : 'Confirm',
+                      backgroundColor:
+                          (tripsController.selectedTrips.value != null)
+                              ? Colors.red
+                              : Colors.teal,
+                      onPressed: () {
+                        if (tripsController.selectedTrips.value != null) {
+                          _showCancelConfirmationDialog(context);
+                        } else {
+                          homeController.confirmBookingOrder(
+                              context, bookingData);
+                        }
+                      },
+                    ),
                 ],
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget cancelSection(BookingData bookingData) {
+    if (bookingData.status != 0 &&
+        tripsController.selectedTrips.value != null) {
+      return const SizedBox(height: 0);
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 24.0),
+            child: Divider(),
+          ),
+          const Text(
+            'Cancellation rules',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'You can still cancel before ${Utils.formatTimestamp(bookingData.startDate, 'MMM dd')}.',
+            style: const TextStyle(
+              fontSize: 17,
+            ),
+          ),
+        ],
+      );
+    }
+  }
+
+  Future<void> _showCancelConfirmationDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Cancel booking'),
+          content: const Text('Are you sure you want to cancel this booking?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Call the logout method in UserController
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

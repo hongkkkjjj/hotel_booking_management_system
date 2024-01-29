@@ -4,14 +4,16 @@ import 'package:hotel_booking_management_system/Constant/app_route.dart';
 import 'package:hotel_booking_management_system/Controller/rooms_controller.dart';
 import 'package:hotel_booking_management_system/FirebaseController/firestore_controller.dart';
 import 'package:hotel_booking_management_system/Structs/booking_data.dart';
+import 'package:hotel_booking_management_system/Structs/room_data.dart';
 
 class UserHomeController extends GetxController {
   var startDate = DateTime.now().add(const Duration(days: 1)).obs;
   var endDate = DateTime.now().add(const Duration(days: 2)).obs;
   var guestCount = 1.obs;
-  var roomSequence = 0;
+  var roomSequence = 0.obs;
 
   FirestoreController firestoreController = FirestoreController();
+  Rx<RoomType?> selectedRoom = Rx<RoomType?>(null);
 
   void updateGuestCount(int newCount) {
     guestCount.value = newCount;
