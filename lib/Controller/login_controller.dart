@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Constant/app_route.dart';
-import 'package:hotel_booking_management_system/Controller/trips_controller.dart';
 import 'package:hotel_booking_management_system/FirebaseController/firestore_controller.dart';
 import 'package:hotel_booking_management_system/Structs/user_data.dart';
 

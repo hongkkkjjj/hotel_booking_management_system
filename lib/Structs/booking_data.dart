@@ -5,13 +5,15 @@ class BookingData {
   Timestamp endDate;
   String roomId;
   int status;
+  int pricePerNight;
   int totalPrice;
+  int duration;
   String userId;
   int guestCount;
   String updateBy = '';
   Timestamp lastUpdate;
 
-  BookingData(this.startDate, this.endDate, this.roomId, this.status, this.totalPrice, this.userId, this.guestCount, this.updateBy, this.lastUpdate);
+  BookingData(this.startDate, this.endDate, this.roomId, this.status, this.pricePerNight, this.totalPrice, this.duration, this.userId, this.guestCount, this.updateBy, this.lastUpdate);
 
   Map<String, dynamic> toMap() {
     return {
@@ -20,7 +22,9 @@ class BookingData {
       'room_id': roomId,
       'last_update': lastUpdate,
       'status': status,
+      'price_per_night': pricePerNight,
       'total_price': totalPrice,
+      'duration': duration,
       'guest_count': guestCount,
       'updated_by': updateBy,
       'user_id': userId,

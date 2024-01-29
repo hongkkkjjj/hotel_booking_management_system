@@ -10,22 +10,53 @@ import '../Constant/app_const.dart';
 import '../Controller/home_controller.dart';
 import '../Controller/profile_controller.dart';
 import '../Controller/rooms_controller.dart';
+import '../Controller/trips_controller.dart';
 import '../FirebaseController/auth.dart';
 import '../Widget/custom_elevated_button.dart';
 
 class BookingScreen extends StatelessWidget {
-  RoomsController roomsController = Get.find<RoomsController>();
-  UserHomeController homeController = Get.find<UserHomeController>();
+  final RoomsController roomsController = Get.find<RoomsController>();
+  final UserHomeController homeController = Get.find<UserHomeController>();
+  final TripsController tripsController = Get.find<TripsController>();
 
   BookingScreen({super.key});
 
-  int roomSequence = 0;
-
   @override
   Widget build(BuildContext context) {
-    roomSequence = homeController.roomSequence;
-    var selectedImgList =
+    int roomSequence = homeController.roomSequence;
+    List<String> selectedImgList =
         roomsController.imageUrls[roomSequence.toString()] ?? [];
+    BookingData bookingData;
+
+    if (tripsController.selectedTrips.value != null) {
+      bookingData = tripsController.selectedTrips.value!;
+    } else {
+      DateTime formattedStartDate = DateTime(
+          homeController.startDate.value.year,
+          homeController.startDate.value.month,
+          homeController.startDate.value.day,
+          23,
+          59,
+          59);
+      DateTime formattedEndDate = DateTime(homeController.endDate.value.year,
+          homeController.endDate.value.month, homeController.endDate.value.day);
+      User? user = Auth().currentUser;
+      String userName = Get.find<UserController>().name.value;
+
+      bookingData = BookingData(
+        Timestamp.fromDate(formattedStartDate),
+        Timestamp.fromDate(formattedEndDate),
+        roomsController.searchRoomList[roomSequence].id,
+        0,
+
+        int.parse(roomsController.priceController.text) *
+            roomsController.searchDuration,
+        user?.uid ?? '',
+        homeController.guestCount.value,
+        userName,
+        Timestamp.fromDate(DateTime.now()),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -58,7 +89,7 @@ class BookingScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '${Utils.formatDate(homeController.startDate.value, 'MMM dd')} - ${Utils.formatDate(homeController.endDate.value, 'MMM dd')}',
+                    '${Utils.formatTimestamp(bookingData.startDate, 'MMM dd')} - ${Utils.formatTimestamp(bookingData.endDate, 'MMM dd')}',
                     style: const TextStyle(
                       fontSize: 17,
                     ),
@@ -73,7 +104,7 @@ class BookingScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '${homeController.guestCount.value} ${(homeController.guestCount.value > 1) ? 'guests' : 'guest'}',
+                    '${bookingData.guestCount} ${(bookingData.guestCount > 1) ? 'guests' : 'guest'}',
                     style: const TextStyle(
                       fontSize: 17,
                     ),
@@ -97,30 +128,30 @@ class BookingScreen extends StatelessWidget {
                                 width: 96,
                                 child: (selectedImgList.isNotEmpty)
                                     ? CachedNetworkImage(
-                                        imageUrl: selectedImgList[0],
-                                        placeholder: (context, url) =>
-                                            const SizedBox(
-                                          width: 48,
-                                          height: 48,
-                                          child: Center(
-                                            child: CircularProgressIndicator(),
-                                          ),
-                                        ),
-                                        errorWidget: (context, url, error) =>
-                                            Image.asset(
-                                          'assets/images/img_no_img.png',
-                                          fit: BoxFit.fill,
-                                        ),
-                                        fit: BoxFit.fill,
-                                      )
-                                    : Image.asset(
+                                  imageUrl: selectedImgList[0],
+                                  placeholder: (context, url) =>
+                                  const SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Image.asset(
                                         'assets/images/img_no_img.png',
                                         fit: BoxFit.fill,
                                       ),
+                                  fit: BoxFit.fill,
+                                )
+                                    : Image.asset(
+                                  'assets/images/img_no_img.png',
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                               const SizedBox(width: 16),
                               Text(
-                                '${roomsController.titleController.text}',
+                                roomsController.titleController.text,
                                 style: const TextStyle(
                                   fontSize: 24,
                                 ),
@@ -173,7 +204,7 @@ class BookingScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'You can still cancel before ${Utils.formatDate(homeController.startDate.value, 'MMM dd')}.',
+                    'You can still cancel before ${Utils.formatTimestamp(bookingData.startDate, 'MMM dd')}.',
                     style: const TextStyle(
                       fontSize: 17,
                     ),
@@ -183,32 +214,6 @@ class BookingScreen extends StatelessWidget {
                     label: 'Confirm',
                     backgroundColor: Colors.teal,
                     onPressed: () {
-                      DateTime formattedStartDate = DateTime(
-                          homeController.startDate.value.year,
-                          homeController.startDate.value.month,
-                          homeController.startDate.value.day,
-                          23,
-                          59,
-                          59);
-                      DateTime formattedEndDate = DateTime(
-                          homeController.endDate.value.year,
-                          homeController.endDate.value.month,
-                          homeController.endDate.value.day);
-                      User? user = Auth().currentUser;
-                      String userName = Get.find<UserController>().name.value;
-
-                      BookingData bookingData = BookingData(
-                        Timestamp.fromDate(formattedStartDate),
-                        Timestamp.fromDate(formattedEndDate),
-                        roomsController.searchRoomList[roomSequence].id,
-                        0,
-                        int.parse(roomsController.priceController.text) *
-                            roomsController.searchDuration,
-                        user?.uid ?? '',
-                        homeController.guestCount.value,
-                        userName,
-                        Timestamp.fromDate(DateTime.now()),
-                      );
                       homeController.confirmBookingOrder(context, bookingData);
                     },
                   ),

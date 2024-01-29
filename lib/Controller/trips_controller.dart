@@ -14,6 +14,8 @@ class TripsController extends GetxController {
 
   FirestoreController firestoreController = FirestoreController();
 
+  Rx<BookingData?> selectedTrips = Rx<BookingData?>(null);
+
   void getTripsData() async {
     User? user = Auth().currentUser;
     if (user != null) {

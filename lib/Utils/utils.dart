@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
@@ -5,7 +6,11 @@ class Utils {
     return DateFormat(format).format(date);
   }
 
-  static DateTime formatStringDate(String date, String format) {
+  static String formatTimestamp(Timestamp timestamp, String format) {
+    return DateFormat(format).format(timestamp.toDate());
+  }
+
+  static DateTime parseDateFrom(String date, String format) {
     return DateFormat(format).parse(date);
   }
 

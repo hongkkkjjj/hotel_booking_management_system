@@ -72,7 +72,8 @@ class FirestoreController {
         int squareMeter = data['square_meter'] as int? ?? 0;
         int price = data['price'] as int? ?? 0;
         String updateBy = data['update_by'] as String? ?? "";
-        Timestamp lastUpdate = data['last_update'] as Timestamp? ?? Timestamp.now();
+        Timestamp lastUpdate =
+            data['last_update'] as Timestamp? ?? Timestamp.now();
 
         var bedsMap = data['beds'] as Map<String, dynamic>? ?? {};
         List<BedData> beds = bedsMap.entries.map((entry) {
@@ -130,7 +131,7 @@ class FirestoreController {
         String date = data['date'] as String? ??
             Utils.formatDate(DateTime.now(), dateFormat);
         int price = data['price'] as int? ?? 0;
-        DateTime formatDate = Utils.formatStringDate(date, dateFormat);
+        DateTime formatDate = Utils.parseDateFrom(date, dateFormat);
 
         return CalendarRoom(doc.id, id, price, formatDate);
       }).toList();
@@ -222,15 +223,17 @@ class FirestoreController {
             Timestamp.fromDate(DateTime.now());
         Timestamp startDate = data['start_date'] as Timestamp? ??
             Timestamp.fromDate(DateTime.now());
+        int pricePerNight = data['price_per_night'] as int? ?? 0;
         int totalPrice = data['total_price'] as int? ?? 0;
+        int duration = data['duration'] as int? ?? 0;
         int guestCount = data['guest_count'] as int? ?? 0;
         int status = data['status'] as int? ?? 0;
         String updateBy = data['updated_by'] as String? ?? '';
         Timestamp lastUpdate = data['last_update'] as Timestamp? ??
             Timestamp.fromDate(DateTime.now());
 
-        return BookingData(startDate, endDate, roomId, status, totalPrice,
-            userId, guestCount, updateBy, lastUpdate);
+        return BookingData(startDate, endDate, roomId, status, pricePerNight,
+            totalPrice, duration, userId, guestCount, updateBy, lastUpdate);
       }).toList();
       return bookingList;
     } catch (e) {
