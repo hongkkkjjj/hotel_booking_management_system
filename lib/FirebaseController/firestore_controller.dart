@@ -216,6 +216,7 @@ class FirestoreController {
           .where('user_id', isEqualTo: userId)
           .get();
       List<BookingData> bookingList = querySnapshot.docs.map((doc) {
+        String docId = doc.reference.id;
         var data = doc.data() as Map<String, dynamic>;
 
         String roomId = data['room_id'] as String? ?? '';
@@ -232,13 +233,24 @@ class FirestoreController {
         Timestamp lastUpdate = data['last_update'] as Timestamp? ??
             Timestamp.fromDate(DateTime.now());
 
-        return BookingData(startDate, endDate, roomId, status, pricePerNight,
+        return BookingData(docId, startDate, endDate, roomId, status, pricePerNight,
             totalPrice, duration, userId, guestCount, updateBy, lastUpdate);
       }).toList();
       return bookingList;
     } catch (e) {
       print(e.toString());
       return [];
+    }
+  }
+
+  Future<bool> updateBookingStatus(String bookingId, Map<String, dynamic> bookingData) async {
+    try {
+      await firestore.collection('bookings').doc(bookingId).set(bookingData);
+      return true;
+    } catch (e) {
+      // Handle exceptions
+      print(e.toString());
+      return false;
     }
   }
 }

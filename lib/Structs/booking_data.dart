@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BookingData {
+  String bookingId;
   Timestamp startDate;
   Timestamp endDate;
   String roomId;
@@ -13,7 +14,7 @@ class BookingData {
   String updateBy = '';
   Timestamp lastUpdate;
 
-  BookingData(this.startDate, this.endDate, this.roomId, this.status, this.pricePerNight, this.totalPrice, this.duration, this.userId, this.guestCount, this.updateBy, this.lastUpdate);
+  BookingData(this.bookingId, this.startDate, this.endDate, this.roomId, this.status, this.pricePerNight, this.totalPrice, this.duration, this.userId, this.guestCount, this.updateBy, this.lastUpdate);
 
   Map<String, dynamic> toMap() {
     return {
