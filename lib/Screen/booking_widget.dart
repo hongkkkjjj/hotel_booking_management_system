@@ -32,8 +32,10 @@ class BookingScreen extends StatelessWidget {
         roomsController.imageUrls[roomSequence.toString()] ?? [];
     BookingData bookingData;
     String roomTitle;
+    bool isAdmin = landingTabController.userType.value == UserType.admin;
+    bool isNewBooking = tripsController.selectedTrips.value == null;
 
-    if (tripsController.selectedTrips.value != null) {
+    if (!isNewBooking) {
       bookingData = tripsController.selectedTrips.value!;
 
       roomTitle = roomsController.roomList
@@ -77,9 +79,7 @@ class BookingScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
-        title: Text((landingTabController.userType.value == UserType.guest)
-            ? 'Confirmation'
-            : 'Booking Details'),
+        title: Text((isAdmin) ? 'Booking Details' : 'Confirmation'),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
@@ -90,13 +90,21 @@ class BookingScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Your room',
-                    style: TextStyle(
+                  Text(
+                    (isNewBooking) ? 'Your room' : 'Booking ID',
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
                     ),
                   ),
+                  if (!isNewBooking)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        bookingData.bookingId,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
                   const SizedBox(height: 24),
                   const Text(
                     'Dates',
@@ -212,25 +220,20 @@ class BookingScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  cancelSection(bookingData),
+                  cancelSection(bookingData, isAdmin, isNewBooking),
                   const SizedBox(height: 24),
-                  guestDetail(),
-                  if (bookingData.status == 0 &&
-                      landingTabController.userType.value == UserType.guest)
+                  guestDetail(isAdmin),
+                  if (bookingData.status == 0 && !isAdmin)
                     CustomElevatedButton(
-                      label: (tripsController.selectedTrips.value != null)
-                          ? 'Cancel'
-                          : 'Confirm',
+                      label: (isNewBooking) ? 'Confirm' : 'Cancel',
                       backgroundColor:
-                          (tripsController.selectedTrips.value != null)
-                              ? Colors.red
-                              : Colors.teal,
+                          (isNewBooking) ? Colors.teal : Colors.red,
                       onPressed: () {
-                        if (tripsController.selectedTrips.value != null) {
-                          _showCancelConfirmationDialog(context, bookingData);
-                        } else {
+                        if (isNewBooking) {
                           homeController.confirmBookingOrder(
                               context, bookingData);
+                        } else {
+                          _showCancelConfirmationDialog(context, bookingData);
                         }
                       },
                     ),
@@ -243,10 +246,9 @@ class BookingScreen extends StatelessWidget {
     );
   }
 
-  Widget cancelSection(BookingData bookingData) {
-    if (bookingData.status != 0 &&
-            tripsController.selectedTrips.value != null ||
-        landingTabController.userType.value == UserType.admin) {
+  Widget cancelSection(
+      BookingData bookingData, bool isAdmin, bool isNewBooking) {
+    if (bookingData.status != 0 && !isNewBooking || isAdmin) {
       return const SizedBox(height: 0);
     } else {
       return Column(
@@ -275,8 +277,8 @@ class BookingScreen extends StatelessWidget {
     }
   }
 
-  Widget guestDetail() {
-    if (landingTabController.userType.value == UserType.admin) {
+  Widget guestDetail(bool isAdmin) {
+    if (isAdmin) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
