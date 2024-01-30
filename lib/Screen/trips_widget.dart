@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Constant/app_const.dart';
 import 'package:hotel_booking_management_system/Constant/app_route.dart';
 import 'package:hotel_booking_management_system/Controller/trips_controller.dart';
 import 'package:hotel_booking_management_system/Structs/booking_data.dart';
@@ -19,55 +20,60 @@ class TripsScreen extends StatelessWidget {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(bottom: 24.0),
-              child: Text(
-                'Current Trips',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
+        child: Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: kWebWidth),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 24.0),
+                  child: Text(
+                    'Current Trips',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Obx(
-              () => Expanded(
-                child: ListView.builder(
-                  itemCount: tripsController.currentTrips.length,
-                  itemBuilder: (context, index) {
-                    BookingData selectedTrip =
-                        tripsController.currentTrips[index];
-                            
-                    return detailCard(selectedTrip);
-                  },
+                Obx(
+                  () => Expanded(
+                    child: ListView.builder(
+                      itemCount: tripsController.currentTrips.length,
+                      itemBuilder: (context, index) {
+                        BookingData selectedTrip =
+                            tripsController.currentTrips[index];
+
+                        return detailCard(selectedTrip);
+                      },
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 24.0),
-              child: Text(
-                'Past Trips',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 24.0),
+                  child: Text(
+                    'Past Trips',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Obx(
-              () => Expanded(
-                child: ListView.builder(
-                  itemCount: tripsController.pastTrips.length,
-                  itemBuilder: (context, index) {
-                    BookingData selectedTrip = tripsController.pastTrips[index];
-                            
-                    return detailCard(selectedTrip);
-                  },
+                Obx(
+                  () => Expanded(
+                    child: ListView.builder(
+                      itemCount: tripsController.pastTrips.length,
+                      itemBuilder: (context, index) {
+                        BookingData selectedTrip = tripsController.pastTrips[index];
+
+                        return detailCard(selectedTrip);
+                      },
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

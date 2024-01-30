@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Constant/app_const.dart';
 import 'package:hotel_booking_management_system/Controller/landing_tab_controller.dart';
 import 'package:hotel_booking_management_system/Controller/rooms_controller.dart';
 import 'package:hotel_booking_management_system/Structs/enums.dart';
@@ -56,127 +57,132 @@ class AddRoomTypeScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              imageViewSection(),
-              const SizedBox(height: 16.0),
-              TextField(
-                enabled: isTextFieldEnable,
-                decoration: const InputDecoration(
-                  labelText: 'Room Title',
-                  labelStyle: TextStyle(color: Colors.black),
-                  disabledBorder: InputBorder.none,
-                ),
-                controller: roomsController.titleController,
-                style: const TextStyle(color: Colors.black),
-              ),
-              const SizedBox(height: 16.0),
-              TextField(
-                enabled: isTextFieldEnable,
-                keyboardType: TextInputType.number,
-                controller: roomsController.squareFeetController,
-                decoration: const InputDecoration(
-                  labelText: 'Size in Square Feet (ft\u00b2)',
-                  labelStyle: TextStyle(color: Colors.black),
-                  disabledBorder: InputBorder.none,
-                ),
-                focusNode: roomsController.squareFeetFocusNode,
-                onEditingComplete: roomsController.convertToSquareMeters,
-                style: const TextStyle(color: Colors.black),
-              ),
-              const SizedBox(height: 16.0),
-              TextField(
-                enabled: isTextFieldEnable,
-                keyboardType: TextInputType.number,
-                controller: roomsController.squareMeterController,
-                decoration: const InputDecoration(
-                  labelText: 'Size in Square Meter (m\u00b2)',
-                  labelStyle: TextStyle(color: Colors.black),
-                  disabledBorder: InputBorder.none,
-                ),
-                focusNode: roomsController.squareMeterFocusNode,
-                onEditingComplete: roomsController.convertToSquareFeet,
-                style: const TextStyle(color: Colors.black),
-              ),
-              const SizedBox(height: 16.0),
-              TextField(
-                enabled: isTextFieldEnable,
-                keyboardType: TextInputType.number,
-                controller: roomsController.priceController,
-                decoration: const InputDecoration(
-                  labelText: 'Price (RM)',
-                  labelStyle: TextStyle(color: Colors.black),
-                  disabledBorder: InputBorder.none,
-                ),
-                style: const TextStyle(color: Colors.black),
-              ),
-              const SizedBox(height: 16.0),
-              TextField(
-                maxLines: null,
-                enabled: isTextFieldEnable,
-                controller: roomsController.descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                  labelStyle: TextStyle(color: Colors.black),
-                  disabledBorder: InputBorder.none,
-                ),
-                style: const TextStyle(color: Colors.black),
-              ),
-              const SizedBox(height: 16.0),
-              TextField(
-                enabled: isTextFieldEnable,
-                keyboardType: TextInputType.number,
-                controller: roomsController.guestCapController,
-                decoration: const InputDecoration(
-                  labelText: 'Can Accommodate How Many Persons',
-                  labelStyle: TextStyle(color: Colors.black),
-                  disabledBorder: InputBorder.none,
-                ),
-                style: const TextStyle(color: Colors.black),
-              ),
-              if (landingTabController.userType.value == UserType.admin)
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: TextField(
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: kWebWidth),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  imageViewSection(),
+                  const SizedBox(height: 16.0),
+                  TextField(
                     enabled: isTextFieldEnable,
-                    controller: roomsController.roomNumberController,
                     decoration: const InputDecoration(
-                      labelText: 'Room Number',
+                      labelText: 'Room Title',
+                      labelStyle: TextStyle(color: Colors.black),
+                      disabledBorder: InputBorder.none,
+                    ),
+                    controller: roomsController.titleController,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  const SizedBox(height: 16.0),
+                  TextField(
+                    enabled: isTextFieldEnable,
+                    keyboardType: TextInputType.number,
+                    controller: roomsController.squareFeetController,
+                    decoration: const InputDecoration(
+                      labelText: 'Size in Square Feet (ft\u00b2)',
+                      labelStyle: TextStyle(color: Colors.black),
+                      disabledBorder: InputBorder.none,
+                    ),
+                    focusNode: roomsController.squareFeetFocusNode,
+                    onEditingComplete: roomsController.convertToSquareMeters,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  const SizedBox(height: 16.0),
+                  TextField(
+                    enabled: isTextFieldEnable,
+                    keyboardType: TextInputType.number,
+                    controller: roomsController.squareMeterController,
+                    decoration: const InputDecoration(
+                      labelText: 'Size in Square Meter (m\u00b2)',
+                      labelStyle: TextStyle(color: Colors.black),
+                      disabledBorder: InputBorder.none,
+                    ),
+                    focusNode: roomsController.squareMeterFocusNode,
+                    onEditingComplete: roomsController.convertToSquareFeet,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  const SizedBox(height: 16.0),
+                  TextField(
+                    enabled: isTextFieldEnable,
+                    keyboardType: TextInputType.number,
+                    controller: roomsController.priceController,
+                    decoration: const InputDecoration(
+                      labelText: 'Price (RM)',
                       labelStyle: TextStyle(color: Colors.black),
                       disabledBorder: InputBorder.none,
                     ),
                     style: const TextStyle(color: Colors.black),
                   ),
-                ),
-              const SizedBox(height: 24.0),
-              Text(
-                (isTextFieldEnable) ? 'Bed Type (Leave empty if 0)' : 'Beds',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              // Input fields for bed count for each bed type
-              ...bedSection(context, isTextFieldEnable),
-              const SizedBox(height: 24.0),
-              if (roomsController.addRoomScreenType == AddRoomScreenType.Edit)
-                Row(
-                  children: [
-                    const Spacer(),
-                    Column(
+                  const SizedBox(height: 16.0),
+                  TextField(
+                    maxLines: null,
+                    enabled: isTextFieldEnable,
+                    controller: roomsController.descriptionController,
+                    decoration: const InputDecoration(
+                      labelText: 'Description',
+                      labelStyle: TextStyle(color: Colors.black),
+                      disabledBorder: InputBorder.none,
+                    ),
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  const SizedBox(height: 16.0),
+                  TextField(
+                    enabled: isTextFieldEnable,
+                    keyboardType: TextInputType.number,
+                    controller: roomsController.guestCapController,
+                    decoration: const InputDecoration(
+                      labelText: 'Can Accommodate How Many Persons',
+                      labelStyle: TextStyle(color: Colors.black),
+                      disabledBorder: InputBorder.none,
+                    ),
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  if (landingTabController.userType.value == UserType.admin)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: TextField(
+                        enabled: isTextFieldEnable,
+                        controller: roomsController.roomNumberController,
+                        decoration: const InputDecoration(
+                          labelText: 'Room Number',
+                          labelStyle: TextStyle(color: Colors.black),
+                          disabledBorder: InputBorder.none,
+                        ),
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  const SizedBox(height: 24.0),
+                  Text(
+                    (isTextFieldEnable) ? 'Bed Type (Leave empty if 0)' : 'Beds',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  // Input fields for bed count for each bed type
+                  ...bedSection(context, isTextFieldEnable),
+                  const SizedBox(height: 24.0),
+                  if (roomsController.addRoomScreenType == AddRoomScreenType.Edit)
+                    Row(
                       children: [
-                        Text('Last updated by: ${roomsController.updateBy}'),
-                        Text(
-                            'At ${Utils.formatDate(roomsController.lastUpdate.toDate(), 'yyyy MMM dd')}'),
+                        const Spacer(),
+                        Column(
+                          children: [
+                            Text('Last updated by: ${roomsController.updateBy}'),
+                            Text(
+                                'At ${Utils.formatDate(roomsController.lastUpdate.toDate(), 'yyyy MMM dd')}'),
+                          ],
+                        )
                       ],
-                    )
-                  ],
-                ),
-              const SizedBox(height: 24.0),
-              bottomButton(context, roomSequence),
-            ],
+                    ),
+                  const SizedBox(height: 24.0),
+                  bottomButton(context, roomSequence),
+                ],
+              ),
+            ),
           ),
         ),
       ),
