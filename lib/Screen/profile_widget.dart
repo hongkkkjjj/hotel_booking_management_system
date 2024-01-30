@@ -99,7 +99,7 @@ class ProfileScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
                     child: CustomElevatedButton(
-                      icon: Icons.add,
+                      icon: Icons.person_add_alt_1,
                       label: 'Add New Admin',
                       backgroundColor: Colors.teal,
                       onPressed: () {

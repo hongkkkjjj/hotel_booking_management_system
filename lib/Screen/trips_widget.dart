@@ -14,7 +14,7 @@ class TripsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    tripsController.getTripsData();
+    tripsController.getTripsDataForUser();
 
     return Scaffold(
       body: Padding(

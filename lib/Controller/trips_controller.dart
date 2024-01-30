@@ -9,17 +9,19 @@ import 'package:hotel_booking_management_system/Structs/enums.dart';
 import '../Constant/app_route.dart';
 import '../FirebaseController/auth.dart';
 import '../FirebaseController/firestore_controller.dart';
+import 'landing_tab_controller.dart';
 
 class TripsController extends GetxController {
   List<BookingData> tripList = <BookingData>[].obs;
   RxList<BookingData> pastTrips = <BookingData>[].obs;
   RxList<BookingData> currentTrips = <BookingData>[].obs;
+  RxList<BookingData> upcomingTrips = <BookingData>[].obs;
 
   FirestoreController firestoreController = FirestoreController();
 
   Rx<BookingData?> selectedTrips = Rx<BookingData?>(null);
 
-  void getTripsData() async {
+  void getTripsDataForUser() async {
     User? user = Auth().currentUser;
     if (user != null) {
       tripList = await firestoreController.getBookingDataForUser(user.uid);
@@ -49,6 +51,35 @@ class TripsController extends GetxController {
         }
       }
       update();
+    }
+  }
+
+  void getTripsDataForAdmin() async {
+    tripList = await firestoreController.getBookingDataForAdmin();
+    final dateNow = DateTime.now();
+    final dateCheck = DateTime(dateNow.year, dateNow.month, dateNow.day);
+    final now = Timestamp.fromDate(dateCheck); // Get the current timestamp
+    currentTrips.clear();
+    pastTrips.clear();
+
+    for (final booking in tripList) {
+      final startDate = booking.startDate;
+      final endDate = booking.endDate;
+
+      if (booking.status == BookingStatus.Cancelled.index ||
+          booking.status == BookingStatus.Completed.index) {
+        pastTrips.add(booking);
+      } else if (startDate.toDate().isAfter(now.toDate()) ||
+          endDate.toDate().isAfter(now.toDate())) {
+        currentTrips.add(booking);
+      } else {
+        BookingStatus status = mapIntToBookingStatus(booking.status);
+        if (status != BookingStatus.Completed ||
+            status != BookingStatus.Cancelled) {
+          booking.status = BookingStatus.Cancelled.index;
+        }
+        pastTrips.add(booking);
+      }
     }
   }
 
@@ -82,8 +113,13 @@ class TripsController extends GetxController {
       }
 
       _showUploadDialog(context, 'Update Success', msg, () {
-        getTripsData();
-        Get.offAllNamed(Routes.home);
+        if (Get.find<LandingTabController>().userType.value == UserType.guest) {
+          getTripsDataForUser();
+          Get.offAllNamed(Routes.home);
+        } else {
+          Navigator.of(context).pop();
+          getTripsDataForAdmin();
+        }
       });
     }
   }

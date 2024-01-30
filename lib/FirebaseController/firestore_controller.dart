@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hotel_booking_management_system/FirebaseController/storage_controller.dart';
 import 'package:hotel_booking_management_system/Structs/booking_data.dart';
+import 'package:hotel_booking_management_system/Structs/enums.dart';
 import 'package:hotel_booking_management_system/Structs/user_data.dart';
 import 'package:hotel_booking_management_system/Utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
@@ -160,13 +161,15 @@ class FirestoreController {
     DateTime searchEndDate,
   ) async {
     try {
-      QuerySnapshot querySnapshot =
-          await firestore.collection('bookings').get();
+      QuerySnapshot querySnapshot = await firestore
+          .collection('bookings')
+          .where('status', whereIn: [0, 1, 3]).get();
 
       Set<String> bookedRoomSet = querySnapshot.docs.map((doc) {
         var data = doc.data() as Map<String, dynamic>;
 
         String id = data['room_id'] as String? ?? '';
+        int duration = data['duration'] as int? ?? 0;
         Timestamp startTimestamp = data['start_date'] as Timestamp? ??
             Timestamp.fromDate(DateTime.now());
         Timestamp endTimestamp = data['end_date'] as Timestamp? ??
@@ -176,6 +179,15 @@ class FirestoreController {
         DateTime endDate = endTimestamp.toDate();
 
         // Check if searchStartDate is within the date range
+        String s0 = Utils.formatDate(searchStartDate, 'MMM dd, hh mm');
+        String s1 = Utils.formatDate(searchEndDate, 'MMM dd, hh mm');
+        String s2 = Utils.formatDate(startDate, 'MMM dd, hh mm');
+        String s3 = Utils.formatDate(endDate, 'MMM dd, hh mm');
+        // print("s0 is $s0\ns1 is $s1\ns2 is $s2\ns3 is $s3");
+        // print("wow is ${searchStartDate.isAfter(startDate)}");
+        print("wow 0 duration is $duration");
+        print("wow 1 $searchStartDate ::: $startDate ::: ");
+        print("wow 2 $searchEndDate ::: $endDate ::: ");
         if (Utils.isDateInRange(searchStartDate, startDate, endDate)) {
           return id;
         }
@@ -233,8 +245,19 @@ class FirestoreController {
         Timestamp lastUpdate = data['last_update'] as Timestamp? ??
             Timestamp.fromDate(DateTime.now());
 
-        return BookingData(docId, startDate, endDate, roomId, status, pricePerNight,
-            totalPrice, duration, userId, guestCount, updateBy, lastUpdate);
+        return BookingData(
+            docId,
+            startDate,
+            endDate,
+            roomId,
+            status,
+            pricePerNight,
+            totalPrice,
+            duration,
+            userId,
+            guestCount,
+            updateBy,
+            lastUpdate);
       }).toList();
       return bookingList;
     } catch (e) {
@@ -243,7 +266,54 @@ class FirestoreController {
     }
   }
 
-  Future<bool> updateBookingStatus(String bookingId, Map<String, dynamic> bookingData) async {
+  Future<List<BookingData>> getBookingDataForAdmin() async {
+    try {
+      QuerySnapshot querySnapshot = await firestore
+          .collection('bookings')
+          .where('end_date', isGreaterThan: Timestamp.now())
+          .get();
+      List<BookingData> bookingList = querySnapshot.docs.map((doc) {
+        String docId = doc.reference.id;
+        var data = doc.data() as Map<String, dynamic>;
+
+        String roomId = data['room_id'] as String? ?? '';
+        Timestamp endDate = data['end_date'] as Timestamp? ??
+            Timestamp.fromDate(DateTime.now());
+        Timestamp startDate = data['start_date'] as Timestamp? ??
+            Timestamp.fromDate(DateTime.now());
+        int pricePerNight = data['price_per_night'] as int? ?? 0;
+        int totalPrice = data['total_price'] as int? ?? 0;
+        int duration = data['duration'] as int? ?? 0;
+        String userId = data['user_id'] as String? ?? '';
+        int guestCount = data['guest_count'] as int? ?? 0;
+        int status = data['status'] as int? ?? 0;
+        String updateBy = data['updated_by'] as String? ?? '';
+        Timestamp lastUpdate = data['last_update'] as Timestamp? ??
+            Timestamp.fromDate(DateTime.now());
+
+        return BookingData(
+            docId,
+            startDate,
+            endDate,
+            roomId,
+            status,
+            pricePerNight,
+            totalPrice,
+            duration,
+            userId,
+            guestCount,
+            updateBy,
+            lastUpdate);
+      }).toList();
+      return bookingList;
+    } catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
+  Future<bool> updateBookingStatus(
+      String bookingId, Map<String, dynamic> bookingData) async {
     try {
       await firestore.collection('bookings').doc(bookingId).set(bookingData);
       return true;

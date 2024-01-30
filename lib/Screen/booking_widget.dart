@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Controller/landing_tab_controller.dart';
 import 'package:hotel_booking_management_system/Structs/booking_data.dart';
 import 'package:hotel_booking_management_system/Structs/enums.dart';
 import 'package:hotel_booking_management_system/Utils/utils.dart';
@@ -19,6 +20,8 @@ class BookingScreen extends StatelessWidget {
   final RoomsController roomsController = Get.find<RoomsController>();
   final UserHomeController homeController = Get.find<UserHomeController>();
   final TripsController tripsController = Get.find<TripsController>();
+  final LandingTabController landingTabController =
+      Get.find<LandingTabController>();
 
   BookingScreen({super.key});
 
@@ -38,19 +41,20 @@ class BookingScreen extends StatelessWidget {
           .title;
     } else {
       DateTime formattedStartDate = DateTime(
-          homeController.startDate.value.year,
-          homeController.startDate.value.month,
-          homeController.startDate.value.day,
-          23,
-          59,
-          59);
-      DateTime formattedEndDate = DateTime(homeController.endDate.value.year,
-          homeController.endDate.value.month, homeController.endDate.value.day);
+        homeController.startDate.value.year,
+        homeController.startDate.value.month,
+        homeController.startDate.value.day,
+      );
+      DateTime formattedEndDate = DateTime(
+        homeController.endDate.value.year,
+        homeController.endDate.value.month,
+        homeController.endDate.value.day,
+        23,
+        59,
+        59,
+      );
       User? user = Auth().currentUser;
-      String userName = Get
-          .find<UserController>()
-          .name
-          .value;
+      String userName = Get.find<UserController>().name.value;
 
       bookingData = BookingData(
         '',
@@ -101,9 +105,7 @@ class BookingScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '${Utils.formatTimestamp(
-                        bookingData.startDate, 'MMM dd')} - ${Utils
-                        .formatTimestamp(bookingData.endDate, 'MMM dd')}',
+                    '${Utils.formatTimestamp(bookingData.startDate, 'MMM dd')} - ${Utils.formatTimestamp(bookingData.endDate, 'MMM dd')}',
                     style: const TextStyle(
                       fontSize: 17,
                     ),
@@ -118,9 +120,7 @@ class BookingScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '${bookingData.guestCount} ${(bookingData.guestCount > 1)
-                        ? 'guests'
-                        : 'guest'}',
+                    '${bookingData.guestCount} ${(bookingData.guestCount > 1) ? 'guests' : 'guest'}',
                     style: const TextStyle(
                       fontSize: 17,
                     ),
@@ -144,26 +144,26 @@ class BookingScreen extends StatelessWidget {
                                 width: 96,
                                 child: (selectedImgList.isNotEmpty)
                                     ? CachedNetworkImage(
-                                  imageUrl: selectedImgList[0],
-                                  placeholder: (context, url) =>
-                                  const SizedBox(
-                                    width: 48,
-                                    height: 48,
-                                    child: Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset(
+                                        imageUrl: selectedImgList[0],
+                                        placeholder: (context, url) =>
+                                            const SizedBox(
+                                          width: 48,
+                                          height: 48,
+                                          child: Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Image.asset(
+                                          'assets/images/img_no_img.png',
+                                          fit: BoxFit.fill,
+                                        ),
+                                        fit: BoxFit.fill,
+                                      )
+                                    : Image.asset(
                                         'assets/images/img_no_img.png',
                                         fit: BoxFit.fill,
                                       ),
-                                  fit: BoxFit.fill,
-                                )
-                                    : Image.asset(
-                                  'assets/images/img_no_img.png',
-                                  fit: BoxFit.fill,
-                                ),
                               ),
                               const SizedBox(width: 16),
                               Text(
@@ -189,16 +189,14 @@ class BookingScreen extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                'RM${bookingData.pricePerNight} x ${bookingData
-                                    .duration} night.',
+                                'RM${bookingData.pricePerNight} x ${bookingData.duration} night.',
                                 style: const TextStyle(
                                   fontSize: 17,
                                 ),
                               ),
                               const Spacer(),
                               Text(
-                                'RM${bookingData.pricePerNight *
-                                    bookingData.duration}',
+                                'RM${bookingData.pricePerNight * bookingData.duration}',
                                 style: const TextStyle(
                                   fontSize: 17,
                                 ),
@@ -211,15 +209,17 @@ class BookingScreen extends StatelessWidget {
                   ),
                   cancelSection(bookingData),
                   const SizedBox(height: 24),
-                  if (bookingData.status == 0)
+                  guestDetail(),
+                  if (bookingData.status == 0 &&
+                      landingTabController.userType.value == UserType.guest)
                     CustomElevatedButton(
                       label: (tripsController.selectedTrips.value != null)
                           ? 'Cancel'
                           : 'Confirm',
                       backgroundColor:
-                      (tripsController.selectedTrips.value != null)
-                          ? Colors.red
-                          : Colors.teal,
+                          (tripsController.selectedTrips.value != null)
+                              ? Colors.red
+                              : Colors.teal,
                       onPressed: () {
                         if (tripsController.selectedTrips.value != null) {
                           _showCancelConfirmationDialog(context, bookingData);
@@ -240,7 +240,8 @@ class BookingScreen extends StatelessWidget {
 
   Widget cancelSection(BookingData bookingData) {
     if (bookingData.status != 0 &&
-        tripsController.selectedTrips.value != null) {
+            tripsController.selectedTrips.value != null ||
+        landingTabController.userType.value == UserType.admin) {
       return const SizedBox(height: 0);
     } else {
       return Column(
@@ -259,8 +260,7 @@ class BookingScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'You can still cancel before ${Utils.formatTimestamp(
-                bookingData.startDate, 'MMM dd')}.',
+            'You can still cancel before ${Utils.formatTimestamp(bookingData.startDate, 'MMM dd')}.',
             style: const TextStyle(
               fontSize: 17,
             ),
@@ -270,8 +270,88 @@ class BookingScreen extends StatelessWidget {
     }
   }
 
-  Future<void> _showCancelConfirmationDialog(BuildContext context,
-      BookingData bookingData) async {
+  Widget guestDetail() {
+    if (landingTabController.userType.value == UserType.admin) {
+      return const Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(bottom: 16.0),
+            child: Divider(),
+          ),
+          Card(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 16.0),
+                    child: Text(
+                      'Contact',
+                      style: TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Name: '),
+                      Flexible(
+                        child: Text(
+                          'John Doe',
+                          textAlign: TextAlign.end,
+                          maxLines: null,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Mobile number: '),
+                      Flexible(
+                        child: Text(
+                          '0123456789',
+                          textAlign: TextAlign.end,
+                          maxLines: null,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Email: '),
+                      Flexible(
+                        child: Text(
+                          'test@mail.com',
+                          textAlign: TextAlign.end,
+                          maxLines: null,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return const SizedBox(height: 0);
+    }
+  }
+
+  Future<void> _showCancelConfirmationDialog(
+      BuildContext context, BookingData bookingData) async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -288,7 +368,8 @@ class BookingScreen extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                tripsController.updateTripStatus(context, bookingData, BookingStatus.Cancelled.index);
+                tripsController.updateTripStatus(
+                    context, bookingData, BookingStatus.Cancelled.index);
               },
               child: const Text('Yes'),
             ),

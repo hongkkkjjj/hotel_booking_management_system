@@ -34,9 +34,9 @@ class UserHomeController extends GetxController {
         'Searching: Start Date: ${startDate.value}, End Date: ${endDate.value}, Guest Count: ${guestCount.value}');
 
     DateTime formattedStartDate = DateTime(startDate.value.year,
-        startDate.value.month, startDate.value.day, 23, 59, 59);
+        startDate.value.month, startDate.value.day, 0, 0, 1);
     DateTime formattedEndDate =
-        DateTime(endDate.value.year, endDate.value.month, endDate.value.day);
+        DateTime(endDate.value.year, endDate.value.month, endDate.value.day, 23, 59, 58);
 
     Set<String> resultSet = await firestoreController.getSearch(
         formattedStartDate, formattedEndDate);
