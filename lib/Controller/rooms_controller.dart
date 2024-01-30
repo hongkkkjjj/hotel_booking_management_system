@@ -33,6 +33,7 @@ class RoomsController extends GetxController {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController guestCapController = TextEditingController();
+  final TextEditingController roomNumberController = TextEditingController();
   List<TextEditingController> bedCountControllers = [];
   FocusNode squareMeterFocusNode = FocusNode();
   FocusNode squareFeetFocusNode = FocusNode();
@@ -137,6 +138,7 @@ class RoomsController extends GetxController {
       int.parse(squareMeterController.text),
       descriptionController.text,
       int.parse(guestCapController.text),
+      roomNumberController.text,
       bedsList,
       int.parse(priceController.text),
       userController.name.value,
@@ -179,6 +181,7 @@ class RoomsController extends GetxController {
       int.parse(squareMeterController.text),
       descriptionController.text,
       int.parse(guestCapController.text),
+      roomNumberController.text,
       bedsList,
       int.parse(priceController.text),
       userController.name.value,
@@ -213,6 +216,7 @@ class RoomsController extends GetxController {
     squareMeterController.text = selectedRoom.squareMeter.toString();
     descriptionController.text = selectedRoom.description;
     guestCapController.text = selectedRoom.guestCapacity.toString();
+    roomNumberController.text = selectedRoom.roomNumber;
     priceController.text = selectedRoom.price.toString();
 
 
@@ -225,13 +229,14 @@ class RoomsController extends GetxController {
   }
 
   void clearEditingController() {
-    capturedImageList = [];
-    titleController.text = '';
-    squareFeetController.text = '';
-    squareMeterController.text = '';
-    descriptionController.text = '';
-    guestCapController.text = '';
-    priceController.text = '';
+    capturedImageList.clear();
+    titleController.clear();
+    squareFeetController.clear();
+    squareMeterController.clear();
+    descriptionController.clear();
+    guestCapController.clear();
+    roomNumberController.clear();
+    priceController.clear();
   }
 
   void _showUploadDialog(BuildContext context, String title, String content,

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Controller/landing_tab_controller.dart';
 import 'package:hotel_booking_management_system/Controller/rooms_controller.dart';
 import 'package:hotel_booking_management_system/Structs/enums.dart';
 import 'package:hotel_booking_management_system/Utils/utils.dart';
@@ -14,6 +15,8 @@ import '../Widget/custom_elevated_button.dart';
 class AddRoomTypeScreen extends StatelessWidget {
   final RoomsController roomsController = Get.find<RoomsController>();
   final UserHomeController userHomeController = Get.find<UserHomeController>();
+  final LandingTabController landingTabController =
+      Get.find<LandingTabController>();
 
   AddRoomTypeScreen({super.key});
 
@@ -41,7 +44,8 @@ class AddRoomTypeScreen extends StatelessWidget {
     roomsController.clearEditingController();
 
     if (roomsController.addRoomScreenType != AddRoomScreenType.Add) {
-      roomsController.addRoomDataToEditingController(roomSequence, userHomeController.selectedRoom.value);
+      roomsController.addRoomDataToEditingController(
+          roomSequence, userHomeController.selectedRoom.value);
     }
 
     return Scaffold(
@@ -131,6 +135,20 @@ class AddRoomTypeScreen extends StatelessWidget {
                 ),
                 style: const TextStyle(color: Colors.black),
               ),
+              if (landingTabController.userType.value == UserType.admin)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: TextField(
+                    enabled: isTextFieldEnable,
+                    controller: roomsController.roomNumberController,
+                    decoration: const InputDecoration(
+                      labelText: 'Room Number',
+                      labelStyle: TextStyle(color: Colors.black),
+                      disabledBorder: InputBorder.none,
+                    ),
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                ),
               const SizedBox(height: 24.0),
               Text(
                 (isTextFieldEnable) ? 'Bed Type (Leave empty if 0)' : 'Beds',
@@ -150,7 +168,8 @@ class AddRoomTypeScreen extends StatelessWidget {
                     Column(
                       children: [
                         Text('Last updated by: ${roomsController.updateBy}'),
-                        Text('At ${Utils.formatDate(roomsController.lastUpdate.toDate(), 'yyyy MMM dd')}'),
+                        Text(
+                            'At ${Utils.formatDate(roomsController.lastUpdate.toDate(), 'yyyy MMM dd')}'),
                       ],
                     )
                   ],
@@ -180,45 +199,39 @@ class AddRoomTypeScreen extends StatelessWidget {
       if (roomsController.addRoomScreenType == AddRoomScreenType.Edit) {
         return CachedNetworkImage(
           imageUrl: imgStr,
-          placeholder: (context, url) =>
-          const SizedBox(
+          placeholder: (context, url) => const SizedBox(
             width: 60,
             height: 60,
             child: Center(
               child: CircularProgressIndicator(),
             ),
           ),
-          errorWidget: (context, url, error) =>
-              Image.asset(
-                'assets/images/img_no_img.png',
-                fit: BoxFit.fill,
-              ),
+          errorWidget: (context, url, error) => Image.asset(
+            'assets/images/img_no_img.png',
+            fit: BoxFit.fill,
+          ),
           fit: BoxFit.fill,
-          imageBuilder: (context, imageProvider) =>
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 2),
-                  image: DecorationImage(
-                      image: imageProvider, fit: BoxFit.fill),
-                ),
-              ),
+          imageBuilder: (context, imageProvider) => Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black, width: 2),
+              image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
+            ),
+          ),
         );
       } else {
         return CachedNetworkImage(
           imageUrl: imgStr,
-          placeholder: (context, url) =>
-          const SizedBox(
+          placeholder: (context, url) => const SizedBox(
             width: 60,
             height: 60,
             child: Center(
               child: CircularProgressIndicator(),
             ),
           ),
-          errorWidget: (context, url, error) =>
-              Image.asset(
-                'assets/images/img_no_img.png',
-                fit: BoxFit.fill,
-              ),
+          errorWidget: (context, url, error) => Image.asset(
+            'assets/images/img_no_img.png',
+            fit: BoxFit.fill,
+          ),
           fit: BoxFit.fill,
         );
       }
@@ -270,8 +283,7 @@ class AddRoomTypeScreen extends StatelessWidget {
                     child: imageWidget(imgStr),
                   );
                 },
-                separatorBuilder: (context, index) =>
-                const SizedBox(
+                separatorBuilder: (context, index) => const SizedBox(
                   width: 10,
                 ),
               ),
@@ -286,20 +298,20 @@ class AddRoomTypeScreen extends StatelessWidget {
 
     if (roomsController.addRoomScreenType == AddRoomScreenType.View) {
       return List.generate(roomsController.roomList[roomSequence].beds.length,
-              (index) {
-            var bedType = roomsController.roomList[roomSequence].beds[index];
-            return TextField(
-              enabled: isTextFieldEnable,
-              keyboardType: TextInputType.number,
-              controller: roomsController.bedCountControllers[index],
-              decoration: InputDecoration(
-                labelText: 'Bed Count for ${bedType.bedName}',
-                labelStyle: const TextStyle(color: Colors.black),
-                disabledBorder: InputBorder.none,
-              ),
-              style: const TextStyle(color: Colors.black),
-            );
-          });
+          (index) {
+        var bedType = roomsController.roomList[roomSequence].beds[index];
+        return TextField(
+          enabled: isTextFieldEnable,
+          keyboardType: TextInputType.number,
+          controller: roomsController.bedCountControllers[index],
+          decoration: InputDecoration(
+            labelText: 'Bed Count for ${bedType.bedName}',
+            labelStyle: const TextStyle(color: Colors.black),
+            disabledBorder: InputBorder.none,
+          ),
+          style: const TextStyle(color: Colors.black),
+        );
+      });
     } else {
       return List.generate(roomsController.bedTypes.length, (index) {
         var bedType = roomsController.bedTypes[index];

@@ -10,12 +10,13 @@ class RoomType {
   int squareMeter;
   String description;
   int guestCapacity;
+  String roomNumber;
   List<BedData> beds;
   int price;
   String updateBy = '';
   Timestamp lastUpdate;
 
-  RoomType(this.id, this.title, this.imageCount, this.squareFeet, this.squareMeter, this.description, this.guestCapacity, this.beds, this.price, this.updateBy, this.lastUpdate);
+  RoomType(this.id, this.title, this.imageCount, this.squareFeet, this.squareMeter, this.description, this.guestCapacity, this.roomNumber, this.beds, this.price, this.updateBy, this.lastUpdate);
 
   Map<String, dynamic> toMap() {
     return {
@@ -26,6 +27,7 @@ class RoomType {
       'square_feet': squareFeet,
       'square_meter': squareMeter,
       'price': price,
+      'room_number': roomNumber,
       'update_by': updateBy,
       'last_update': lastUpdate,
       'beds': { for (var bed in beds) bed.bedName : bed.count },

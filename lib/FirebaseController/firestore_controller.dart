@@ -72,6 +72,7 @@ class FirestoreController {
         int imageCount = data['image_count'] as int? ?? 0;
         int squareFeet = data['square_feet'] as int? ?? 0;
         int squareMeter = data['square_meter'] as int? ?? 0;
+        String roomNumber = data['room_number'] as String? ?? "";
         int price = data['price'] as int? ?? 0;
         String updateBy = data['update_by'] as String? ?? "";
         Timestamp lastUpdate =
@@ -92,6 +93,7 @@ class FirestoreController {
           squareMeter,
           description,
           guestCapacity,
+          roomNumber,
           beds,
           price,
           updateBy,
