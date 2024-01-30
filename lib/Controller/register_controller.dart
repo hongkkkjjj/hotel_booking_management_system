@@ -20,7 +20,7 @@ class RegisterController extends GetxController {
       // final User? user = userCredential.user;
       var user = Auth().currentUser;
       if (user != null) {
-        UserData userData = UserData(nameController.text, mobileController.text, isAdmin);
+        UserData userData = UserData(nameController.text, mobileController.text, isAdmin, user.email!);
         bool result = await FirestoreController().addUserData(user.uid, userData.toMap());
 
         if (result) {

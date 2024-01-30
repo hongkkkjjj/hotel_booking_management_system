@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Structs/booking_data.dart';
 import 'package:hotel_booking_management_system/Structs/enums.dart';
+import 'package:hotel_booking_management_system/Structs/user_data.dart';
 
 import '../Constant/app_route.dart';
 import '../FirebaseController/auth.dart';
@@ -20,6 +21,7 @@ class TripsController extends GetxController {
   FirestoreController firestoreController = FirestoreController();
 
   Rx<BookingData?> selectedTrips = Rx<BookingData?>(null);
+  Rx<UserData?> selectedGuest = Rx<UserData?>(null);
 
   void getTripsDataForUser() async {
     User? user = Auth().currentUser;
@@ -32,53 +34,41 @@ class TripsController extends GetxController {
       pastTrips.clear();
 
       for (final booking in tripList) {
-        final startDate = booking.startDate;
         final endDate = booking.endDate;
 
         if (booking.status == BookingStatus.Cancelled.index ||
             booking.status == BookingStatus.Completed.index) {
           pastTrips.add(booking);
-        } else if (startDate.toDate().isAfter(now.toDate()) ||
-            endDate.toDate().isAfter(now.toDate())) {
-          currentTrips.add(booking);
-        } else {
+        } else if (endDate.toDate().isBefore(now.toDate())) {
           BookingStatus status = mapIntToBookingStatus(booking.status);
           if (status != BookingStatus.Completed ||
               status != BookingStatus.Cancelled) {
             booking.status = BookingStatus.Cancelled.index;
           }
           pastTrips.add(booking);
+        } else {
+          currentTrips.add(booking);
         }
       }
       update();
     }
   }
 
-  void getTripsDataForAdmin() async {
+  Future<void> getTripsDataForAdmin() async {
     tripList = await firestoreController.getBookingDataForAdmin();
     final dateNow = DateTime.now();
-    final dateCheck = DateTime(dateNow.year, dateNow.month, dateNow.day);
+    final dateCheck = DateTime(dateNow.year, dateNow.month, dateNow.day, 23, 59, 59);
     final now = Timestamp.fromDate(dateCheck); // Get the current timestamp
     currentTrips.clear();
-    pastTrips.clear();
+    upcomingTrips.clear();
 
     for (final booking in tripList) {
       final startDate = booking.startDate;
-      final endDate = booking.endDate;
 
-      if (booking.status == BookingStatus.Cancelled.index ||
-          booking.status == BookingStatus.Completed.index) {
-        pastTrips.add(booking);
-      } else if (startDate.toDate().isAfter(now.toDate()) ||
-          endDate.toDate().isAfter(now.toDate())) {
-        currentTrips.add(booking);
+      if (startDate.toDate().isAfter(now.toDate())) {
+        upcomingTrips.add(booking);
       } else {
-        BookingStatus status = mapIntToBookingStatus(booking.status);
-        if (status != BookingStatus.Completed ||
-            status != BookingStatus.Cancelled) {
-          booking.status = BookingStatus.Cancelled.index;
-        }
-        pastTrips.add(booking);
+        currentTrips.add(booking);
       }
     }
   }
@@ -109,7 +99,7 @@ class TripsController extends GetxController {
           msg = 'The booking has been marked as paid.';
           break;
         default:
-          msg = '';
+          msg = 'The booking has been marked as unpaid.';
       }
 
       _showUploadDialog(context, 'Update Success', msg, () {

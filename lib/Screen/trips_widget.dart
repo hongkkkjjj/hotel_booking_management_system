@@ -32,15 +32,14 @@ class TripsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: kIsWeb ? 300 : 200,
-              child: Obx(
-                () => ListView.builder(
+            Obx(
+              () => Expanded(
+                child: ListView.builder(
                   itemCount: tripsController.currentTrips.length,
                   itemBuilder: (context, index) {
                     BookingData selectedTrip =
                         tripsController.currentTrips[index];
-
+                            
                     return detailCard(selectedTrip);
                   },
                 ),
@@ -56,14 +55,13 @@ class TripsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: kIsWeb ? 300 : 200,
-              child: Obx(
-                () => ListView.builder(
+            Obx(
+              () => Expanded(
+                child: ListView.builder(
                   itemCount: tripsController.pastTrips.length,
                   itemBuilder: (context, index) {
                     BookingData selectedTrip = tripsController.pastTrips[index];
-
+                            
                     return detailCard(selectedTrip);
                   },
                 ),

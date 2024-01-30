@@ -32,15 +32,15 @@ class RoomsScreen extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 16.0),
-                CustomElevatedButton(
-                  icon: Icons.money,
-                  label: 'Adjust Room Price',
-                  backgroundColor: Colors.orange,
-                  onPressed: () {
-                    Get.toNamed(Routes.adjustPrice);
-                  },
-                ),
-                const SizedBox(height: 16.0),
+                // CustomElevatedButton(
+                //   icon: Icons.money,
+                //   label: 'Adjust Room Price',
+                //   backgroundColor: Colors.orange,
+                //   onPressed: () {
+                //     Get.toNamed(Routes.adjustPrice);
+                //   },
+                // ),
+                // const SizedBox(height: 16.0),
                 CustomElevatedButton(
                   icon: Icons.list,
                   label: 'Manage Rooms',

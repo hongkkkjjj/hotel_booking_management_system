@@ -32,8 +32,9 @@ class FirestoreController {
         String username = data!['name'] as String? ?? '-';
         String mobileNo = data!['mobile_no'] as String? ?? '-';
         bool isAdmin = data!['is_admin'] as bool? ?? false;
+        String email = data!['email'] as String? ?? '-';
 
-        UserData userData = UserData(username, mobileNo, isAdmin);
+        UserData userData = UserData(username, mobileNo, isAdmin, email);
         return userData;
       } else {
         return null;
@@ -169,7 +170,6 @@ class FirestoreController {
         var data = doc.data() as Map<String, dynamic>;
 
         String id = data['room_id'] as String? ?? '';
-        int duration = data['duration'] as int? ?? 0;
         Timestamp startTimestamp = data['start_date'] as Timestamp? ??
             Timestamp.fromDate(DateTime.now());
         Timestamp endTimestamp = data['end_date'] as Timestamp? ??
@@ -179,15 +179,6 @@ class FirestoreController {
         DateTime endDate = endTimestamp.toDate();
 
         // Check if searchStartDate is within the date range
-        String s0 = Utils.formatDate(searchStartDate, 'MMM dd, hh mm');
-        String s1 = Utils.formatDate(searchEndDate, 'MMM dd, hh mm');
-        String s2 = Utils.formatDate(startDate, 'MMM dd, hh mm');
-        String s3 = Utils.formatDate(endDate, 'MMM dd, hh mm');
-        // print("s0 is $s0\ns1 is $s1\ns2 is $s2\ns3 is $s3");
-        // print("wow is ${searchStartDate.isAfter(startDate)}");
-        print("wow 0 duration is $duration");
-        print("wow 1 $searchStartDate ::: $startDate ::: ");
-        print("wow 2 $searchEndDate ::: $endDate ::: ");
         if (Utils.isDateInRange(searchStartDate, startDate, endDate)) {
           return id;
         }
@@ -271,7 +262,7 @@ class FirestoreController {
       QuerySnapshot querySnapshot = await firestore
           .collection('bookings')
           .where('end_date', isGreaterThan: Timestamp.now())
-          .get();
+          .where('status', whereIn: [0, 1, 3]).get();
       List<BookingData> bookingList = querySnapshot.docs.map((doc) {
         String docId = doc.reference.id;
         var data = doc.data() as Map<String, dynamic>;

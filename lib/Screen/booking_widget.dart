@@ -77,7 +77,9 @@ class BookingScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
-        title: const Text('Confirmation'),
+        title: Text((landingTabController.userType.value == UserType.guest)
+            ? 'Confirmation'
+            : 'Booking Details'),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
@@ -166,10 +168,13 @@ class BookingScreen extends StatelessWidget {
                                       ),
                               ),
                               const SizedBox(width: 16),
-                              Text(
-                                roomTitle,
-                                style: const TextStyle(
-                                  fontSize: 24,
+                              Flexible(
+                                child: Text(
+                                  roomTitle,
+                                  maxLines: null,
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                  ),
                                 ),
                               ),
                             ],
@@ -272,20 +277,20 @@ class BookingScreen extends StatelessWidget {
 
   Widget guestDetail() {
     if (landingTabController.userType.value == UserType.admin) {
-      return const Column(
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(bottom: 16.0),
             child: Divider(),
           ),
           Card(
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(bottom: 16.0),
                     child: Text(
                       'Contact',
@@ -298,43 +303,43 @@ class BookingScreen extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Name: '),
+                      const Text('Name: '),
                       Flexible(
                         child: Text(
-                          'John Doe',
+                          '${tripsController.selectedGuest.value?.username}',
                           textAlign: TextAlign.end,
                           maxLines: null,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       )
                     ],
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Mobile number: '),
+                      const Text('Mobile number: '),
                       Flexible(
                         child: Text(
-                          '0123456789',
+                          '${tripsController.selectedGuest.value?.mobileNo}',
                           textAlign: TextAlign.end,
                           maxLines: null,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       )
                     ],
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Email: '),
+                      const Text('Email: '),
                       Flexible(
                         child: Text(
-                          'test@mail.com',
+                          '${tripsController.selectedGuest.value?.email}',
                           textAlign: TextAlign.end,
                           maxLines: null,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       )
                     ],

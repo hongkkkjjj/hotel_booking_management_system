@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hotel_booking_management_system/Controller/landing_tab_controller.dart';
 
 import '../Constant/app_route.dart';
 import '../Controller/trips_controller.dart';
@@ -10,6 +11,7 @@ import '../Utils/utils.dart';
 
 class AdminHomeScreen extends StatelessWidget {
   TripsController tripsController = Get.find<TripsController>();
+  LandingTabController landingTabController = Get.find<LandingTabController>();
 
   AdminHomeScreen({super.key});
 
@@ -34,44 +36,55 @@ class AdminHomeScreen extends StatelessWidget {
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.refresh),
-                    onPressed: () {
-
+                    onPressed: () async {
+                      showLoaderDialog(context);
+                      await tripsController.getTripsDataForAdmin();
+                      if (!context.mounted) return;
+                      Navigator.of(context).pop();
                     },
                   )
                 ],
               ),
             ),
-            SizedBox(
-              height: kIsWeb ? 300 : 200,
-              child: Obx(
-                () => ListView.builder(
-                  itemCount: tripsController.currentTrips.length,
-                  itemBuilder: (context, index) {
-                    BookingData selectedTrip =
-                        tripsController.currentTrips[index];
+            Obx(
+              () => (tripsController.currentTrips.isNotEmpty)
+                  ? Expanded(
+                      child: ListView.builder(
+                        itemCount: tripsController.currentTrips.length,
+                        itemBuilder: (context, index) {
+                          BookingData selectedTrip =
+                              tripsController.currentTrips[index];
 
-                    return detailCard(selectedTrip, context, true);
-                  },
-                ),
-              ),
+                          return detailCard(selectedTrip, context, true);
+                        },
+                      ),
+                    )
+                  : const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text('No bookings for today'),
+                    ),
             ),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 24.0),
               child: Chip(label: Text('Upcoming\'s bookings')),
             ),
-            SizedBox(
-              height: kIsWeb ? 300 : 200,
-              child: Obx(
-                () => ListView.builder(
-                  itemCount: tripsController.upcomingTrips.length,
-                  itemBuilder: (context, index) {
-                    BookingData selectedTrip =
-                        tripsController.upcomingTrips[index];
+            Obx(
+              () => (tripsController.upcomingTrips.isNotEmpty)
+                  ? Expanded(
+                      child: ListView.builder(
+                        itemCount: tripsController.upcomingTrips.length,
+                        itemBuilder: (context, index) {
+                          BookingData selectedTrip =
+                              tripsController.upcomingTrips[index];
 
-                    return detailCard(selectedTrip, context, false);
-                  },
-                ),
-              ),
+                          return detailCard(selectedTrip, context, false);
+                        },
+                      ),
+                    )
+                  : const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text('No upcoming bookings'),
+                    ),
             ),
           ],
         ),
@@ -79,14 +92,16 @@ class AdminHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget detailCard(BookingData selectedTrip, BuildContext context, bool isAllowLongPress) {
+  Widget detailCard(
+      BookingData selectedTrip, BuildContext context, bool isAllowLongPress) {
     BookingStatus status = mapIntToBookingStatus(selectedTrip.status);
     int guestCount = selectedTrip.guestCount;
 
     return Card(
       child: InkWell(
         borderRadius: BorderRadius.circular(12.0),
-        onTap: () {
+        onTap: () async {
+          tripsController.selectedGuest.value = await landingTabController.retrieveUserData(selectedTrip.userId);
           tripsController.selectedTrips.value = selectedTrip;
           Get.toNamed(Routes.booking);
         },
@@ -96,7 +111,7 @@ class AdminHomeScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (!kIsWeb)
                 Text(
@@ -112,8 +127,27 @@ class AdminHomeScreen extends StatelessWidget {
                   Text(
                       '$guestCount ${(guestCount > 1) ? 'Person' : 'Persons'}'),
                   const Spacer(),
-                  Text('Status: ${status.statusString}'),
+                  Text(
+                    'Status: ${status.statusString}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ],
+              ),
+              const SizedBox(height: 16),
+              Divider(),
+              const Text(
+                'Last update by:',
+                textAlign: TextAlign.end,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+              ),
+              Text(
+                selectedTrip.updateBy,
+                textAlign: TextAlign.end,
+              ),
+              Text(
+                Utils.formatDate(
+                    selectedTrip.lastUpdate.toDate(), 'yyyy MMM dd'),
+                textAlign: TextAlign.end,
               ),
             ],
           ),
@@ -134,8 +168,30 @@ class AdminHomeScreen extends StatelessWidget {
           .toList(),
     ).then((selectedStatus) {
       if (selectedStatus != null) {
-        tripsController.updateTripStatus(context, bookingData, selectedStatus.index);
+        showLoaderDialog(context);
+        tripsController.updateTripStatus(
+            context, bookingData, selectedStatus.index);
       }
     });
+  }
+
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Row(
+        children: [
+          const CircularProgressIndicator(),
+          Container(
+              margin: const EdgeInsets.only(left: 16),
+              child: const Text("Loading...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }
