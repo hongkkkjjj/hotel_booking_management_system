@@ -80,8 +80,6 @@ class TripsController extends GetxController {
         bookingData.bookingId, bookingData.toMap());
 
     if (result) {
-      if (!context.mounted) return;
-
       BookingStatus status = mapIntToBookingStatus(bookingData.status);
       String msg;
 
@@ -101,7 +99,7 @@ class TripsController extends GetxController {
         default:
           msg = 'The booking has been marked as unpaid.';
       }
-
+      
       _showUploadDialog(context, 'Update Success', msg, () {
         if (Get.find<LandingTabController>().userType.value == UserType.guest) {
           getTripsDataForUser();
