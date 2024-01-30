@@ -11,7 +11,6 @@ import 'Controller/profile_controller.dart';
 import 'Controller/register_controller.dart';
 import 'Controller/rooms_controller.dart';
 import 'Screen/add_room_type_widget.dart';
-import 'Screen/adjust_room_price.dart';
 import 'Screen/landing_tab_widget.dart';
 import 'Screen/loading_screen.dart';
 import 'Screen/login_widget.dart';
@@ -52,7 +51,6 @@ class MyApp extends StatelessWidget {
     // Rooms
     GetPage(name: Routes.rooms, page: () => RoomsScreen()),
     GetPage(name: Routes.addRooms, page: () => AddRoomTypeScreen()),
-    GetPage(name: Routes.adjustPrice, page: () => AdjustRoomPriceScreen()),
     GetPage(name: Routes.manageRoom, page: () => ManageRoomScreen()),
 
     // Booking

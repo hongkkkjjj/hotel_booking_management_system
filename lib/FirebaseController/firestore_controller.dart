@@ -121,42 +121,6 @@ class FirestoreController {
     }
   }
 
-  Future<List<CalendarRoom>> getCalendarRoomData() async {
-    try {
-      QuerySnapshot querySnapshot =
-          await firestore.collection('calendar_room').get();
-      List<CalendarRoom> calendarRooms = querySnapshot.docs.map((doc) {
-        var data = doc.data() as Map<String, dynamic>;
-
-        String dateFormat = 'yyyy-MM-dd';
-        String id = data['id'] as String? ?? '-';
-        String date = data['date'] as String? ??
-            Utils.formatDate(DateTime.now(), dateFormat);
-        int price = data['price'] as int? ?? 0;
-        DateTime formatDate = Utils.parseDateFrom(date, dateFormat);
-
-        return CalendarRoom(doc.id, id, price, formatDate);
-      }).toList();
-      return calendarRooms;
-    } catch (e) {
-      print(e.toString());
-      return [];
-    }
-  }
-
-  Future<void> updateRoomPrice(CalendarRoom room, List<XFile> images) async {
-    Map<String, dynamic> roomData =
-        room.toMap(); // Convert RoomType object to Map
-
-    try {
-      var result = await firestore.collection('rooms').doc().set(roomData);
-      return result;
-    } catch (e) {
-      print("Error storing room data: $e");
-      return;
-    }
-  }
-
   Future<Set<String>> getSearch(
     DateTime searchStartDate,
     DateTime searchEndDate,

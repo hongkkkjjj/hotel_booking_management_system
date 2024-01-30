@@ -18,7 +18,6 @@ class RoomsController extends GetxController {
   List<CalendarEventData> eventList = <CalendarEventData>[].obs;
   List<RoomType> roomList = <RoomType>[].obs;
   List<RoomType> searchRoomList = <RoomType>[].obs;
-  List<CalendarRoom> calendarRoomList = <CalendarRoom>[].obs;
   List<BedType> bedTypes = <BedType>[].obs;
   List<XFile> capturedImageList = <XFile>[];
   var imageUrls = <String, List<String>>{}.obs;
@@ -87,8 +86,6 @@ class RoomsController extends GetxController {
       print('Room ID: ${room.id}, Title: ${room.title}, Price: ${room.price}');
       loadImages(room.id, room.imageCount);
     }
-
-    addCalendarRoomData();
   }
 
   void addCalendarEvent(List<CalendarEventData> list) {
@@ -115,89 +112,6 @@ class RoomsController extends GetxController {
       print('Error loading images: $e');
     }
   }
-
-  // endregion
-
-  // region Get Calendar Room Data
-
-  void addCalendarRoomData() {
-    if (eventList.isNotEmpty) {
-      return;
-    }
-
-    final Map<int, int> priceList = {};
-
-    for (RoomType room in roomList) {
-      int roomId = int.parse(room.id);
-      priceList[roomId] = room.price;
-    }
-
-    List<CalendarRoom> calendarRoomList = [];
-
-    groupAndSortRoomData(calendarRoomList, priceList);
-  }
-
-  // endregion
-
-  // region Get event list
-
-  void groupAndSortRoomData(
-      List<CalendarRoom> calendarRoomList, Map<int, int> defaultPrices) {
-    final DateTime now = DateTime.now();
-    final DateTime today = DateTime(now.year, now.month, now.day);
-    final DateTime maxDate =
-        DateTime.now().add(const Duration(days: 60)); // 2 months from today
-    final Map<DateTime, List<CalendarRoom>> groupedByDate = {};
-
-    // Initial grouping by date
-    for (var room in calendarRoomList) {
-      groupedByDate
-          .putIfAbsent(DateTime(room.date.year, room.date.month, room.date.day),
-              () => [])
-          .add(room);
-    }
-
-    List<CalendarEventData> eventList = [];
-
-    for (DateTime date = today;
-        date.isBefore(maxDate);
-        date = date.add(const Duration(days: 1))) {
-      DateTime startTime = DateTime(date.year, date.month, date.day);
-      DateTime endTime = DateTime(date.year, date.month, date.day, 23, 59, 59);
-
-      for (var roomId = 0; roomId < roomList.length; roomId++) {
-        var roomDataForDateAndId = (groupedByDate[date] ?? []).firstWhere(
-          (room) => room.id == roomId.toString(),
-          orElse: () => CalendarRoom(
-              '', roomId.toString(), defaultPrices[roomId] ?? 0, date),
-        );
-
-        eventList.add(CalendarEventData(
-          date: date,
-          startTime: startTime,
-          // Start of the day
-          endTime: endTime,
-          // End of the day (23:59:59)
-          event: roomDataForDateAndId.id.toString(),
-          title: roomDataForDateAndId.price.toInt().toString(),
-        ));
-      }
-    }
-
-    for (var event in eventList) {
-      print("Date: ${event.date}, ID: ${event.event}, Price: ${event.title}");
-    }
-    print('event count ${eventList.length}');
-    addCalendarEvent(eventList);
-  }
-
-  List<CalendarEventData> filterEventsBySelectedDate(DateTime selectedDate) {
-    return eventList.where((event) {
-      return isSameDay(event.date, selectedDate);
-    }).toList();
-  }
-
-  // endregion
 
   // endregion
 

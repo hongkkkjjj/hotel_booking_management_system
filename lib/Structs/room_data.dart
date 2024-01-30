@@ -2,23 +2,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hotel_booking_management_system/Utils/utils.dart';
 
-class CalendarRoom {
-  String docId;
-  String id;
-  int price;
-  DateTime date;
-
-  CalendarRoom(this.docId, this.id, this.price, this.date);
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'price': price,
-      'date': Utils.formatDate(date, "yyyy-MM-dd"),
-    };
-  }
-}
-
 class RoomType {
   String id;
   String title;
