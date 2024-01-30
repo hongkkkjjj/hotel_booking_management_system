@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 class PasswordTextField extends StatefulWidget {
   final TextEditingController controller;
   final String labelText;
+  final FormFieldValidator? validator;
+  final AutovalidateMode? autoValidateMode;
 
   const PasswordTextField({
     super.key,
     required this.controller,
     required this.labelText,
+    this.validator,
+    this.autoValidateMode,
   });
 
   @override
@@ -19,7 +23,7 @@ class PasswordTextFieldState extends State<PasswordTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: widget.controller,
       decoration: InputDecoration(
         labelText: widget.labelText,
@@ -32,6 +36,8 @@ class PasswordTextFieldState extends State<PasswordTextField> {
           },
         ),
       ),
+      validator: widget.validator,
+      autovalidateMode: widget.autoValidateMode,
       obscureText: obscureText,
     );
   }

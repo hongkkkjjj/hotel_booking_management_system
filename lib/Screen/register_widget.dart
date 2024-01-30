@@ -132,7 +132,7 @@ class RegisterScreen extends StatelessWidget {
       content: Row(
         children: [
           const CircularProgressIndicator(),
-          Container(margin: const EdgeInsets.only(left: 7),child:const Text("Loading..." )),
+          Container(margin: const EdgeInsets.only(left: 16),child:const Text("Loading..." )),
         ],),
     );
     showDialog(barrierDismissible: false,

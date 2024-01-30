@@ -11,6 +11,7 @@ class UserController extends GetxController {
 
   final TextEditingController existingPassword = TextEditingController();
   final TextEditingController newPassword = TextEditingController();
+  final TextEditingController confirmPassword = TextEditingController();
 
   void updateUserDetails(String newName, String newEmail, String newMobile) {
     name.value = newName;
@@ -18,10 +19,11 @@ class UserController extends GetxController {
     mobile.value = newMobile;
   }
 
-  void updatePassword() {
-    // Implement password update logic
-    // For simplicity, this is a placeholder
-    print('Updating password...');
+  void updatePassword() async {
+    bool result = await Auth().updatePassword(existingPassword.text, newPassword.text);
+    if (result) {
+      logout();
+    }
   }
 
   void logout() async {
