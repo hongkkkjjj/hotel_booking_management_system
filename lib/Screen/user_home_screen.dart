@@ -16,6 +16,8 @@ class UserHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    homeController.resetSearchOption();
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(

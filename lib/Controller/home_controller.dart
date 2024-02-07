@@ -15,6 +15,13 @@ class UserHomeController extends GetxController {
   FirestoreController firestoreController = FirestoreController();
   Rx<RoomType?> selectedRoom = Rx<RoomType?>(null);
 
+  void resetSearchOption() {
+    startDate = DateTime.now().add(const Duration(days: 1)).obs;
+    endDate = DateTime.now().add(const Duration(days: 2)).obs;
+    guestCount.value = 1;
+    roomSequence.value = 0;
+  }
+
   void updateGuestCount(int newCount) {
     guestCount.value = newCount;
   }
@@ -48,9 +55,6 @@ class UserHomeController extends GetxController {
 
     roomsController.searchDuration =
         formattedEndDate.difference(formattedStartDate).inDays + 1;
-
-    print("wow day is ${roomsController.searchDuration}");
-    print("wow roomlist length ${roomsController.searchRoomList.length}");
 
     if (roomsController.searchRoomList.isNotEmpty) {
       Get.toNamed(Routes.manageRoom);

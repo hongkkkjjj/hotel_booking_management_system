@@ -218,7 +218,8 @@ class RoomsController extends GetxController {
     guestCapController.text = selectedRoom.guestCapacity.toString();
     roomNumberController.text = selectedRoom.roomNumber;
     priceController.text = selectedRoom.price.toString();
-
+    lastUpdate = selectedRoom.lastUpdate;
+    updateBy = selectedRoom.updateBy;
 
     for (var i in selectedRoom.beds) {
       var index = bedTypes.indexWhere((bed) => bed.bedName == i.bedName);
@@ -237,6 +238,9 @@ class RoomsController extends GetxController {
     guestCapController.clear();
     roomNumberController.clear();
     priceController.clear();
+    for (var bedController in bedCountControllers) {
+      bedController.clear();
+    }
   }
 
   void _showUploadDialog(BuildContext context, String title, String content,
@@ -486,22 +490,11 @@ class RoomsController extends GetxController {
   }
 
 // endregion
-}
 
-// The home screen I not yet done, but the concept is
-// * Home Screen (Normal user)
-// - Welcome xxx (name)
-// - 2x2 box that will ask for person to stay, checkin date, checkout date, prefer type (optional)
-// - Search button below box (Check availability)
-// - Go booking screen
-// - Current booking details
-// - Cell of room details, with checkout date and checkin date on top
-// - Edit booking button below
-//
-// * Home Screen (Admin)
-// - Welcome xxx (name)
-// - Current staying user, new booking request (Top section, like table row, small pop up icon on both cell)
-// - If staying user pop up, all customer name, room number, staying date, checkout date, duration)
-// - If booking request pop up, show details (room number, staying date, checkout date, duration, booking user name, mobile no)
-// - Calendar with Ongoing staying customer on that day
-// - If click on that day will pop up same screen like staying user, but focus on that day
+  void clearRoomsController() {
+    clearEditingController();
+    filterSet = {};
+    isSearch = false;
+    searchRoomList.clear();
+  }
+}

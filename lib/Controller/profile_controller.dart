@@ -27,8 +27,14 @@ class UserController extends GetxController {
   }
 
   void logout() async {
-    print('Logging out...');
     await Auth().signOut();
+    clearProfileController();
     Get.offAllNamed(Routes.login);
+  }
+
+  void clearProfileController() {
+    name.value = '';
+    email.value = '';
+    mobile.value = '';
   }
 }

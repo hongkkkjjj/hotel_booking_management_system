@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Constant/app_route.dart';
+import 'package:hotel_booking_management_system/Structs/enums.dart';
 
 import '../Constant/app_const.dart';
 import '../Controller/rooms_controller.dart';
@@ -27,6 +28,7 @@ class RoomsScreen extends StatelessWidget {
                   label: 'Add New Room',
                   backgroundColor: Colors.teal,
                   onPressed: () {
+                    roomsController.addRoomScreenType = AddRoomScreenType.Add;
                     Get.toNamed(Routes.addRooms);
                     // Get.bottomSheet(AddRoomTypeScreen(), isScrollControlled: true);
                   },

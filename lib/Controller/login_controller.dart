@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Constant/app_route.dart';
+import 'package:hotel_booking_management_system/Controller/rooms_controller.dart';
+import 'package:hotel_booking_management_system/Controller/trips_controller.dart';
 import 'package:hotel_booking_management_system/FirebaseController/firestore_controller.dart';
 import 'package:hotel_booking_management_system/Structs/user_data.dart';
 
@@ -48,6 +50,7 @@ class LoginController extends GetxController {
 
       if (!context.mounted) return;
       Navigator.of(context).pop();
+      resetData();
       Get.offAllNamed(Routes.home);
     } else {
       if (!context.mounted) return;
@@ -60,6 +63,11 @@ class LoginController extends GetxController {
   void clearAllController() {
     emailController.text = '';
     passwordController.text = '';
+  }
+
+  void resetData() {
+    Get.find<RoomsController>().clearRoomsController();
+    Get.find<TripsController>().clearTripsController();
   }
 
   void _showUploadDialog(BuildContext context, String title, String content,

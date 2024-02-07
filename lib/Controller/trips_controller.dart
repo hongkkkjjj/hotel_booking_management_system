@@ -99,7 +99,7 @@ class TripsController extends GetxController {
         default:
           msg = 'The booking has been marked as unpaid.';
       }
-      
+
       _showUploadDialog(context, 'Update Success', msg, () {
         if (Get.find<LandingTabController>().userType.value == UserType.guest) {
           getTripsDataForUser();
@@ -135,5 +135,14 @@ class TripsController extends GetxController {
         );
       },
     );
+  }
+
+  void clearTripsController() {
+    selectedTrips.value = null;
+    selectedGuest.value = null;
+    tripList.clear();
+    pastTrips.value.clear();
+    currentTrips.value.clear();
+    upcomingTrips.value.clear();
   }
 }

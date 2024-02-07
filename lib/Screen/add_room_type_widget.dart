@@ -170,6 +170,7 @@ class AddRoomTypeScreen extends StatelessWidget {
                       children: [
                         const Spacer(),
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text('Last updated by: ${roomsController.updateBy}'),
                             Text(
