@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hotel_booking_management_system/Controller/landing_tab_controller.dart';
 
 import '../Constant/app_route.dart';
+import '../Controller/profile_controller.dart';
 import '../Controller/trips_controller.dart';
 import '../Structs/booking_data.dart';
 import '../Structs/enums.dart';
@@ -134,7 +135,7 @@ class AdminHomeScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              Divider(),
+              const Divider(),
               const Text(
                 'Last update by:',
                 textAlign: TextAlign.end,
@@ -169,6 +170,8 @@ class AdminHomeScreen extends StatelessWidget {
     ).then((selectedStatus) {
       if (selectedStatus != null) {
         showLoaderDialog(context);
+        String userName = Get.find<UserController>().name.value;
+        bookingData.updateBy = userName;
         tripsController.updateTripStatus(
             context, bookingData, selectedStatus.index);
       }

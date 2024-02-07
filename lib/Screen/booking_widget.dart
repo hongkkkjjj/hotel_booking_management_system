@@ -375,6 +375,8 @@ class BookingScreen extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                String userName = Get.find<UserController>().name.value;
+                bookingData.updateBy = userName;
                 tripsController.updateTripStatus(
                     context, bookingData, BookingStatus.Cancelled.index);
               },
